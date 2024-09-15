@@ -1,0 +1,6 @@
+bin
+.env
+uploads
+gin.log
+/.sql
+/*.log.json
