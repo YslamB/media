@@ -118,7 +118,7 @@ func SaveFiles(c *gin.Context) ([]string, error) {
 
 		if strings.ToLower(filepath.Ext(fileNames[index])) != ".mp4" {
 
-			err = resizeImage(config.ENV.UPLOAD_PATH+"orders/"+fileNames[index], 700)
+			err = ResizeImage(config.ENV.UPLOAD_PATH+"orders/"+fileNames[index], 700)
 			if err != nil {
 				return nil, err
 			}
@@ -131,7 +131,7 @@ func SaveFiles(c *gin.Context) ([]string, error) {
 	return filePaths, nil
 }
 
-func resizeImage(imagePath string, width uint) error {
+func ResizeImage(imagePath string, width uint) error {
 	// Open the image file
 	file, err := os.Open(imagePath)
 	if err != nil {
@@ -187,7 +187,7 @@ func ConvertToHLS(filepath, filename, runType string) error {
 	if err := os.MkdirAll(filepath, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to create output directory: %v", err)
 	}
-	if runType == "video" {
+	if runType == "film" {
 		// Define the FFmpeg command to convert video to HLS and resize
 		cmd := exec.Command(
 			"ffmpeg",
@@ -206,7 +206,10 @@ func ConvertToHLS(filepath, filename, runType string) error {
 
 		// Run the FFmpeg command and capture any errors
 		err := cmd.Run()
-		fmt.Println(err)
+		if err != nil {
+			return err
+		}
+		err = os.Remove(filepath + filename)
 		return err
 	}
 
@@ -220,8 +223,8 @@ func ConvertToHLS(filepath, filename, runType string) error {
 	)
 
 	err := cmd.Run()
-
 	fmt.Println("HLS conversion completed successfully!:::", err)
+	err = os.Remove(filepath + filename)
 
 	return err
 }

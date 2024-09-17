@@ -10,5 +10,7 @@ func setupAdminRoutes(r *gin.RouterGroup, ctrl *controllers.AdminController) {
 
 	r.GET("", ctrl.GetUsers)
 	r.POST("/music", ctrl.Music)
+	r.POST("/film", ctrl.Film)
+	r.POST("/login", ctrl.AdminLogin)
 
 }

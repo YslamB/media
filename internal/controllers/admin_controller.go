@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"media/internal/models"
 	"media/internal/services"
 	"media/pkg/utils"
 
@@ -54,4 +55,43 @@ func (ctrl *AdminController) Music(c *gin.Context) {
 
 	utils.GinResponse(c, 200, data, err, 0)
 
+}
+
+func (ctrl *AdminController) Film(c *gin.Context) {
+
+	ctx := c.Request.Context()
+	form, err := c.MultipartForm()
+
+	if err != nil {
+		utils.GinResponse(c, 400, gin.H{"error": "Failed to parse multipart form"}, err, 0)
+		return
+	}
+
+	data, err := ctrl.service.Film(ctx, form)
+
+	utils.GinResponse(c, 200, data, err, 0)
+
+}
+
+func (ctrl *AdminController) AdminLogin(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	var admin models.LoginForm
+	validationError := c.BindJSON(&admin)
+
+	if validationError != nil {
+		ctrl.logger.Println(validationError.Error())
+		c.JSON(400, validationError.Error())
+		return
+	}
+
+	acsessT, refT, err := ctrl.service.AdminLogin(ctx, admin)
+
+	if err != nil {
+		ctrl.logger.Println(err.Error())
+		c.JSON(400, err.Error())
+		return
+	}
+
+	c.JSON(200, gin.H{"access_token": acsessT, "refresh_token": refT})
 }

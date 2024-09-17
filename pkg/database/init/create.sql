@@ -1,5 +1,12 @@
+create table admins (
+    "username" character varying(20) primary key ,
+    "password" character varying(100) not null,
+    "created_at" timestamp without time zone default now(),
+    "updated_at" timestamp without time zone default now()
+);
+
 create table languages (
-    "name" primary key character varying(3),
+    "name" character varying(3) primary key,
     "created_at" timestamp without time zone default now()
 );
 

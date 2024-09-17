@@ -8,7 +8,7 @@ import (
 )
 
 func CreateToken(
-	id int, expiration time.Duration, secret_key, role string,
+	id string, expiration time.Duration, secret_key, role string,
 ) string {
 	unixTime := time.Now().Add(expiration).Unix()
 
@@ -23,7 +23,8 @@ func CreateToken(
 	return tokenString
 }
 
-func CreateRefreshAccsessToken(id int, role string) (string, string) {
+func CreateRefreshAccsessToken(id string, role string) (string, string) {
+
 	accessToken := CreateToken(id, config.ENV.REFRESH_TIME, config.ENV.ACCESS_KEY, role)
 	refreshToken := CreateToken(id, config.ENV.REFRESH_TIME, config.ENV.REFRESH_KEY, role)
 

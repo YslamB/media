@@ -1,0 +1,1800 @@
+{
+	"info": {
+		"_postman_id": "a549df8d-e788-4d5d-bd1a-e8561adedb63",
+		"name": "USSA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37842741"
+	},
+	"item": [
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "User Login",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"phone\": \"64520290\",\r\n    \"password\": \"curva\",\r\n\t\"token\": \"asdfasdf asdf asdf\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}/ussa/auth/user/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"auth",
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "User Login",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "",
+												"value": "",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"phone\": \"61041499\",\r\n    \"password\": \"rado2606\",\r\n\t\"token\": \"asdfasdf asdf asdf\"\r\n}"
+										},
+										"url": {
+											"raw": "{{loc}}/ussa/auth/user/login",
+											"host": [
+												"{{loc}}"
+											],
+											"path": [
+												"ussa",
+												"auth",
+												"user",
+												"login"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.18.0 (Ubuntu)"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 14 Sep 2024 14:46:04 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "569"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjc1MzQ3NjQsImlkIjo0MSwicm9sZSI6InVzZXIifQ.m3O9UgV_k7iud8jT-N4o4qLG5FTR-p5-mTKbp_r1_rg\",\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjc1MzQ3NjQsImlkIjo0MSwicm9sZSI6InVzZXIifQ.4UPcSdgG2N4ea-nsnF5RCEQmgKbMJEFvFNmWDaNj5eM\",\n    \"user\": {\n        \"id\": 41,\n        \"fullname\": \"Yslam\",\n        \"phone\": \"61041499\",\n        \"address\": \"Ashgabat city\",\n        \"subscription\": {\n            \"id\": 0,\n            \"title\": {\n                \"tk\": null,\n                \"ru\": null,\n                \"en\": null\n            },\n            \"description\": {\n                \"tk\": null,\n                \"ru\": null,\n                \"en\": null\n            },\n            \"count\": 0,\n            \"price\": 0,\n            \"subscription_end_date\": null,\n            \"amount_of_use\": null\n        }\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Me",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/ussa/users/user/me",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"users",
+										"user",
+										"me"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Me",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{loc}}/ussa/users/user/me",
+											"host": [
+												"{{loc}}"
+											],
+											"path": [
+												"ussa",
+												"users",
+												"user",
+												"me"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 14 Sep 2024 15:05:29 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "253"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 48,\n    \"fullname\": \"Yslam\",\n    \"phone\": \"61041499\",\n    \"address\": \"Ashgabat city\",\n    \"subscription\": {\n        \"id\": 0,\n        \"title\": {\n            \"tk\": null,\n            \"ru\": null,\n            \"en\": null\n        },\n        \"description\": {\n            \"tk\": null,\n            \"ru\": null,\n            \"en\": null\n        },\n        \"count\": 0,\n        \"price\": 0,\n        \"subscription_end_date\": null,\n        \"amount_of_use\": null\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Verify User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"5063f150\",\r\n    \"phone\": \"61041499\",\r\n    \"password\": \"270889\",\r\n    \"token\": \"ejirOz8xQ_2swwtMsmXZUO:APA91bGHaBpl1nhIZXxO9Xenc_uV8gMK09jlI_uRqGXejWZWV70J4kBg7BW8hK4uzQMsLxQ8QOBw6k6xBPuFxtLZxz2mRSufQyJECfrwHlzxCgZPaQKIKPdg3UtuCGeoc_hX55mS2Jz5\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}/ussa/auth/user/verify",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"auth",
+										"user",
+										"verify"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Verify User",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": \"4ff516b4\",\r\n    \"phone\": \"61041499\",\r\n    \"password\": \"894603\",\r\n    \"token\": \"ejirOz8xQ_2swwtMsmXZUO:APA91bGHaBpl1nhIZXxO9Xenc_uV8gMK09jlI_uRqGXejWZWV70J4kBg7BW8hK4uzQMsLxQ8QOBw6k6xBPuFxtLZxz2mRSufQyJECfrwHlzxCgZPaQKIKPdg3UtuCGeoc_hX55mS2Jz5\"\r\n}"
+										},
+										"url": {
+											"raw": "{{host}}/ussa/auth/user/verify",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"ussa",
+												"auth",
+												"user",
+												"verify"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 14 Sep 2024 15:12:10 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "573"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjc1MzYzMzAsImlkIjo0OSwicm9sZSI6IndvcmtlciJ9.r7UDYfkOm7Ipint9lyNnCuQjaoQa0GHfsiheunhVAoE\",\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjc1MzYzMzAsImlkIjo0OSwicm9sZSI6IndvcmtlciJ9.d3JsFUHHoOEugKD69sQJB0YSO233YJO_eU7ztwJ9Ugo\",\n    \"user\": {\n        \"id\": 49,\n        \"fullname\": \"Yslam\",\n        \"phone\": \"61041499\",\n        \"address\": \"Ashgabat city\",\n        \"subscription\": {\n            \"id\": 0,\n            \"title\": {\n                \"tk\": null,\n                \"ru\": null,\n                \"en\": null\n            },\n            \"description\": {\n                \"tk\": null,\n                \"ru\": null,\n                \"en\": null\n            },\n            \"count\": 0,\n            \"price\": 0,\n            \"subscription_end_date\": null,\n            \"amount_of_use\": null\n        }\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Register User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fullname\": \"Yslam\",\r\n    \"phone\": \"61041499\",\r\n    \"address\": \"Ashgabat city\",\r\n    \"password\": \"rado2606\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}/ussa/auth/user/register",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"auth",
+										"user",
+										"register"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Register User",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"fullname\": \"Yslam\",\r\n    \"phone\": \"61041499\",\r\n    \"address\": \"Ashgabat city\",\r\n    \"password\": \"rado2606\"\r\n}"
+										},
+										"url": {
+											"raw": "{{host}}/ussa/auth/user/register",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"ussa",
+												"auth",
+												"user",
+												"register"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 14 Sep 2024 15:11:17 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "17"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"4ff516b4\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Refresh token",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjc1MzQ3NjQsImlkIjo0MSwicm9sZSI6InVzZXIifQ.4UPcSdgG2N4ea-nsnF5RCEQmgKbMJEFvFNmWDaNj5eM\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}/ussa/auth/refresh-token",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"auth",
+										"refresh-token"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Refresh token",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjc1MzQ3NjQsImlkIjo0MSwicm9sZSI6InVzZXIifQ.4UPcSdgG2N4ea-nsnF5RCEQmgKbMJEFvFNmWDaNj5eM\"\r\n}"
+										},
+										"url": {
+											"raw": "{{host}}/ussa/auth/refresh-token",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"ussa",
+												"auth",
+												"refresh-token"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.18.0 (Ubuntu)"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 14 Sep 2024 15:15:41 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "154"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjY0MTMzNDEsImlkIjo0MSwicm9sZSI6InVzZXIifQ.8sVAv1PMrV-3kMy7shFfE6xisdx_1Q2RKOQb0Y3rpIQ\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Forget password",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"phone\": \"61041499\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}/ussa/auth/user/forget-password",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"auth",
+										"user",
+										"forget-password"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Forget password",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"phone\": \"61041499\"\r\n}"
+										},
+										"url": {
+											"raw": "{{host}}/ussa/auth/user/forget-password",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"ussa",
+												"auth",
+												"user",
+												"forget-password"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.18.0 (Ubuntu)"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 15 Sep 2024 10:08:46 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "17"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"504f20b9\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Verify new password",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"504f20b9\",\r\n    \"phone\": \"61041499\",\r\n    \"otp\": \"528895\",\r\n    \"password\": \"rado2606\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}/ussa/auth/user/new-password",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"auth",
+										"user",
+										"new-password"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Verify new password",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": \"504f20b9\",\r\n    \"phone\": \"61041499\",\r\n    \"otp\": \"528895\",\r\n    \"password\": \"rado2606\"\r\n}"
+										},
+										"url": {
+											"raw": "{{host}}/ussa/auth/user/new-password",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"ussa",
+												"auth",
+												"user",
+												"new-password"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.18.0 (Ubuntu)"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 15 Sep 2024 10:10:10 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "544"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjc2MDQ2MTAsImlkIjowLCJyb2xlIjoid29ya2VyIn0.8kDNooh5YJLbM42JJY8bpfwR8oIZ8SVNOztz-Y5JpxY\",\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjc2MDQ2MTAsImlkIjowLCJyb2xlIjoid29ya2VyIn0.TDOeb9nwx8z5s-GJDWTUYUdE8AwBSzOvAe-JZSsig6M\",\n    \"user\": {\n        \"id\": 0,\n        \"fullname\": \"\",\n        \"phone\": \"\",\n        \"address\": \"\",\n        \"subscription\": {\n            \"id\": 0,\n            \"title\": {\n                \"tk\": null,\n                \"ru\": null,\n                \"en\": null\n            },\n            \"description\": {\n                \"tk\": null,\n                \"ru\": null,\n                \"en\": null\n            },\n            \"count\": 0,\n            \"price\": 0,\n            \"subscription_end_date\": null,\n            \"amount_of_use\": null\n        }\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Refresh notification token",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"refresh_token\": \"refresh edilen\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/ussa/auth/refresh-notification-token",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"auth",
+										"refresh-notification-token"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Refresh notification token",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"refresh_token\": \"refresh edilen\"\n}"
+										},
+										"url": {
+											"raw": "{{host}}/ussa/auth/refresh-notification-token",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"ussa",
+												"auth",
+												"refresh-notification-token"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.18.0 (Ubuntu)"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 15 Sep 2024 11:29:20 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "16"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true\n}"
+								}
+							]
+						},
+						{
+							"name": "Resend OTP",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"phone\": \"61041499\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/ussa/auth/resend-otp",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"auth",
+										"resend-otp"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Resend OTP",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"phone\": \"62845400\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/ussa/auth/resend-otp",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"ussa",
+												"auth",
+												"resend-otp"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.18.0 (Ubuntu)"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 15 Sep 2024 11:29:51 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "17"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"709cc9e8\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Services",
+					"item": [
+						{
+							"name": "All",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/ussa/services",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"services"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "All",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/ussa/services",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"ussa",
+												"services"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.18.0 (Ubuntu)"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 15 Sep 2024 11:33:29 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "301"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": 1,\n        \"title\": {\n            \"tk\": \"Santehnika\",\n            \"ru\": \"Сантехника\",\n            \"en\": \"Plumbing\"\n        },\n        \"image\": \"/uploads/services/sant.png\",\n        \"parent_id\": null,\n        \"children\": null\n    },\n    {\n        \"id\": 2,\n        \"title\": {\n            \"tk\": \"Elektrika\",\n            \"ru\": \"Электрика\",\n            \"en\": \"Electrics\"\n        },\n        \"image\": \"/uploads/services/elec.png\",\n        \"parent_id\": null,\n        \"children\": null\n    }\n]"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Subscriptions",
+					"item": [
+						{
+							"name": "All",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/ussa/subscriptions",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"subscriptions"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "All",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/ussa/subscriptions",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"ussa",
+												"subscriptions"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.18.0 (Ubuntu)"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 15 Sep 2024 11:34:36 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "1128"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": 4,\n        \"title\": {\n            \"tk\": \"Ekspress\",\n            \"ru\": \"Экспресс\",\n            \"en\": \"Express\"\n        },\n        \"description\": {\n            \"tk\": \"Barmaly wagty 1 sagadyň dowamynda, sargyt 1 sagada çenli dowam edýär\",\n            \"ru\": \"Прибытие в течении часа, продолжительность заказа 1 час\",\n            \"en\": \"Arrival within an hour, order duration 1 hour\"\n        },\n        \"days\": null,\n        \"count\": 1,\n        \"price\": 100\n    },\n    {\n        \"id\": 3,\n        \"title\": {\n            \"tk\": \"USSA - 3\",\n            \"ru\": \"МАСТЕР - 3\",\n            \"en\": \"FOREMAN - 3\"\n        },\n        \"description\": {\n            \"tk\": \"Her sargyt 1 sagada çenli\",\n            \"ru\": \"Каждый заказ в течении 1 часа\",\n            \"en\": \"Each order within 1 hour\"\n        },\n        \"days\": \"30\",\n        \"count\": 8,\n        \"price\": 350\n    },\n    {\n        \"id\": 2,\n        \"title\": {\n            \"tk\": \"USSA - 2\",\n            \"ru\": \"МАСТЕР - 2\",\n            \"en\": \"FOREMAN - 2\"\n        },\n        \"description\": {\n            \"tk\": \"Her sargyt 1 sagada çenli\",\n            \"ru\": \"Каждый заказ в течении 1 часа\",\n            \"en\": \"Each order within 1 hour\"\n        },\n        \"days\": \"14\",\n        \"count\": 4,\n        \"price\": 200\n    },\n    {\n        \"id\": 1,\n        \"title\": {\n            \"tk\": \"USSA - 1\",\n            \"ru\": \"МАСТЕР - 1\",\n            \"en\": \"FOREMAN - 1\"\n        },\n        \"description\": {\n            \"tk\": \"Her sargyt 1 sagada çenli\",\n            \"ru\": \"Каждый заказ в течении 1 часа\",\n            \"en\": \"Each order within 1 hour\"\n        },\n        \"days\": \"7\",\n        \"count\": 2,\n        \"price\": 150\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Buy",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"subscription_id\": 1,\n    \"card_type\": \"senagat\",\n    \"expiry\": \"202901\",\n    \"pan\": \"9934702020044221\",\n    \"cvc\": \"275\",\n    \"language\": \"ru\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/ussa/users/buy-sub",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"users",
+										"buy-sub"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"subscription_id\": 1,\n    \"md_order\": \"75468ea9-660a-49c7-8c5e-6288190f1979\",\n    \"otp\": \"25399\"\n}"
+								},
+								"url": {
+									"raw": "{{host}}/ussa/users/confirm-buy-sub",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"users",
+										"confirm-buy-sub"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Order",
+					"item": [
+						{
+							"name": "News",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/ussa/orders/by-user?page=1&count=20",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"orders",
+										"by-user"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "count",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "By status",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/orders/by-user/status/4?page=1&count=20",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"by-user",
+										"status",
+										"4"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "count",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Save files",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "files",
+											"value": "",
+											"type": "file"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/orders/files/21",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"files",
+										"21"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Abort",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/orders/abort/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"orders",
+										"abort",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"21\",\n    \"description\": \"description\",\n    \"address\": \"Asgabat, Taslama (Kosi), j. 50, kw. 17\",\n    \"services\": [1],\n    \"date\": \"2024-01-01\",\n    \"time\": \"10:00\",\n    \"secret_word\": \"-_-\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/ussa/orders/update",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"ussa",
+										"orders",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjUzNTE5MTEsImlkIjo0Niwicm9sZSI6InVzZXIifQ.rNphcKJKtUm-aWHiLcleG2kma2mOT4Awl349Qv61JRM",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description\",\r\n    \"address\": \"Asgabat, Taslama (Kosi), j. 50, kw. 17\",\r\n    \"services\": [1],\r\n    \"date\": \"2024-01-01\",\r\n    \"time\": \"10:00\",\r\n    \"secret_word\": \"-_-\"\r\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/ussa/orders",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"ussa",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 43,\r\n    \"fullname\": \"qwerty\",\r\n    \"phone\": \"61041499\",\r\n    \"address\": \"some random address\",\r\n    \"password\": \"curva\",\r\n    \"subscription_id\": 1\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/ussa/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"ussa",
+								"users"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 43,\r\n    \"fullname\": \"qwerty\",\r\n    \"phone\": \"61041499\",\r\n    \"address\": \"some random address\",\r\n    \"password\": \"curva\",\r\n    \"subscription_id\": 1\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}/ussa/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.18.0 (Ubuntu)"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Sep 2024 13:29:35 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "34"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully updated\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/ussa/users/43",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"ussa",
+								"users",
+								"43"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}/ussa/users/43",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"users",
+										"43"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.18.0 (Ubuntu)"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Sep 2024 13:30:12 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "34"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully deleted\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Buy subscription",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"subscription_id\": 1,\n\t\"card_type\": \"senagat\",\n\t\"expiry\": \"202901\",\n\t\"pan\": \"9934702020044221\",\n\t\"cvc\": \"275\",\n\t\"language\": \"ru\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/users/buy-sub",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"buy-sub"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm buy subscription",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"subscription_id\": 1,\n\t\"md_order\": \"f02ce320-f227-48ad-a9ad-818d3fb6eb9e\",\n\t\"otp\": \"48729\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/users/confirm-buy-sub",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"confirm-buy-sub"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "About Us",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/ussa/about/by-user",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"ussa",
+								"about",
+								"by-user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "About Us",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/ussa/about/by-user",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"about",
+										"by-user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.18.0 (Ubuntu)"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Sep 2024 13:32:38 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 2,\n    \"content\": {\n        \"tk\": \"<h1 class=\\\"ql-align-center\\\"><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">“Türkmendemirýollary” döwlet kärhanasy</strong></h1><p class=\\\"ql-align-center\\\"><br></p><p><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Hukuk salgysy:</strong><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"> Aşgabat ş. Berkararlyk etr., 2035 (B.Garryýew) köçesi, 2-nji jaý</span></p><p><br></p><p><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Tel:</strong><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"> +99360120069 +99360120059</span></p><p><br></p><p><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">E-mail:</strong><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"> </span><a href=\\\"mailto:ussa@sanly.tm\\\" rel=\\\"noopener noreferrer\\\" target=\\\"_blank\\\" style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">ussa@sanly.tm</a></p>\",\n        \"ru\": \"<h1 class=\\\"ql-align-center\\\"><strong style=\\\"background-color: transparent; color: rgb(0, 0, 0);\\\">“Türkmendemirýollary” </strong>государственное предприятие</h1><p class=\\\"ql-align-center\\\"><br></p><p><strong>Юридический адрес</strong><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">:</strong><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"> </span>город Ашхабад, Беркарарлык, 2035 ул. (Б. Гаррыева), дом 2</p><p><br></p><p><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Tel:</strong><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"> +99360120069 +99360120059</span></p><p><br></p><p><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">E-mail:</strong><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"> </span><a href=\\\"mailto:ussa@sanly.tm\\\" rel=\\\"noopener noreferrer\\\" target=\\\"_blank\\\" style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">ussa@sanly.tm</a></p>\",\n        \"en\": \"<h1 class=\\\"ql-align-center\\\"><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">“Türkmendemirýollary” </strong>state enterprise</h1><p class=\\\"ql-align-center\\\"><br></p><p><strong>Legal address</strong><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">:</strong><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"> </span>Ashgabat city, Berkararlyk etr, 2035 (B. Garryev) str., building 2</p><p><br></p><p><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Tel:</strong><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"> +99360120069 +99360120059</span></p><p><br></p><p><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">E-mail:</strong><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"> </span><a href=\\\"mailto:ussa@sanly.tm\\\" rel=\\\"noopener noreferrer\\\" target=\\\"_blank\\\" style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">ussa@sanly.tm</a></p>\"\n    },\n    \"is_active\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Privacy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/ussa/privacy/by-user",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"ussa",
+								"privacy",
+								"by-user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Privacy",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/ussa/privacy/by-user",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"ussa",
+										"privacy",
+										"by-user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.18.0 (Ubuntu)"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Sep 2024 13:32:57 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"content\": {\n        \"tk\": \"<p class=\\\"ql-align-center\\\"><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Ulanyş Düzgünleriniň we Gizlinligiň</strong></p><p class=\\\"ql-align-center\\\"><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">ÖZARA YLALAŞYGY</strong></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Ussa – mobil goşundysy (Mundan beýläk – “Ussa”) we onuň agzasynyň (“Agza”) arasynda aşakdaky şertleri ýerine ýetirmek barada ylalaşyga gelindi.</span></p><p class=\\\"ql-align-justify\\\"><br></p><p class=\\\"ql-align-center\\\"><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Umumy düzgünler</strong></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Agza, Mobil goşundyda bellige alyş işlerini tamamlandan soň, şu Ylalaşykda bellenen şertlere eýermek bilen telefon belgisini we açar sözüni girizip, mobil goşundyny ulanmaga başlap biler.</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Agzanyň mobil goşundyny ulanyp başlamagy Ylalaşygyň ähli şertlerini kabul edýär diýip hasaplanylýar.</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Ylalaşyk, agzalygyňyzyň ýatyrylmagy bilen güýjini ýitirjekdir.</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Ussa şu Ylalaşyga birtaraplaýyn üýtgetmeleri we goşmaçalary girizip biler.</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Mobil goşundynyň belli ýerlerinde, umumy düzgünler, şeýle hem degişli bölüme laýyk başga şertler-de bellenilip biliner. Hyzmatlarymyzdan peýdalanýan Agza, degişli şertleri okan we kabul eden hasaplanýar.</span></p><p class=\\\"ql-align-justify\\\"><br></p><p class=\\\"ql-align-center\\\"><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Agzanyň hukuklary we borçlary</strong></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Mobil goşundy, ähli adamlaryň ulanmagy üçin açykdyr.</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Agza, mobil goşundyny ulananda, Ylalaşykda bellenen ähli şertleri kabul edýär.</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Agza, mobil goşundydan peýdalanan döwründe Türkmenistanyň kanunçylygyna laýyklykda hereket etjekdigine borçlanýar.&nbsp;&nbsp;</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Agza, beýleki agzalaryň we zyýaratçylaryň mobil goşundyny ulanmagyna päsgel beriji ýa-da agyrlaşladyryjy hereketlere baş goşmaly däldir. Baş goşan ýagdaýynda, Ussa tarapyndan agzalykdan çykaryljakdygyny we bu ýagdaý sebäpli ýüze çykjak her bir hukuk we jerime jogapkärçiligini öz üstüne kabul edýär.</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Mobil goşundynyň içinde, şeýle hem sosial ulgamlarda operator bilen ýazyşmalaryň göçürmesiniň saklanmagy agzalaryň jogapkärçiligindedir. Bu Ussa tarapyndan maslahat berilýär. Ýazyşmalaryň göçürmesi saklanmadyk ýagdaýynda, ýitmeginden ýa-da pozulmagyndan Ussa jogapkär däldir.</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Ussa ýa-da Agzanyň özi tarapyndan ýatyrylan agza, hasabyna degişli ýazgysyny, agzanyň garşy talabynyň bolmadyk ýagdaýynda, Ussa ony pozmakda ýa-da pozmazlykda erkindir.</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Agza, mobil goşundyny registrasiýa bolanynda ýa-da hyzmatlaryndan peýdalananynda şahsy we beýleki maglumatlarynyň dogrulygyny we bu maglumatlaryň dogry bolmadyk ýagdaýynda Ussanyň bu sebäpden görjek ähli zeperlerini tölejekdigini kabul edýär.</span></p><p><br></p><p class=\\\"ql-align-center\\\"><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Ussanyň hukuklary we jogapkärçiligi</strong></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Agza, mobil goşundyny ulanmak bilen bagly Türkmenistanyň kanunçylygyny we şu Ylalaşygyň şertlerini bozan ýagdaýynda Ussanyň birtaraplaýyn agzany agzalykdan çykarmaga hukugy bardyr.</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Agzalara, Ussa tarapyndan mobil goşunda agza bolmagy bilen berilen ýa-da öz bellän agza ady, açar sözi ýaly maglumatlaryň ulanmagyny, başga adamlara beren ýagdaýynda, açar sözüniň başga adamalar tarapyndan ýaman niýet bilen ulanylmagyndan Agza jogapkärdir. Şeýle-de, Agza, internet äleminde başganyň IP adresini, e-poçta adresini we ulanyjy adyny ulanyp bilmeýändigi bilen birlikde, Agzalaryň şahsy maglumatlaryny rugsatsyz ulanyp bilmeýär. Ulanylan halatynda, ýüze çykjak ähli hukuk we jerime jogapkärçiliklerini Agza öz üstüne alýar.</span></p><p class=\\\"ql-align-justify\\\"><br></p><p class=\\\"ql-align-center\\\"><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Alynan maglumatlar we olaryň ulanylyşy</strong></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Mobil goşundynyň hyzmatlaryndan ulanýan döwrüňizde we/ýa-da mobil goşundymyza agza bolan ýagdaýyňyzda, size ýokary hilli hyzmat bermek üçin adyňyz, familiýaňyz, e-poçta adresiňiz, telefon belgiňiz, jynsyňyz, doglan günüňiz, öý adresiňiz ýaly käbir şahsy maglumatlaryňyza zerurlyk ýüze çykýar. Mobil goşundyda alynan maglumatlar aşakdaky maksatlar üçin ulanylýar:</span></p><p class=\\\"ql-align-justify\\\"><br></p><ol><li class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Siziň hususy hasabyňyzy döretmek.</span></li><li class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Sargydy ýerine ýetirmek, tamamlamak we müşderilerimiz bilen aragatnaşyk saklamak.</span></li><li class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Sargytlar, hyzmatlar we arzanladyşlar hakda maglumat bermek.</span></li><li class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Müşderilerimiziň saýlawlaryny has gowy bilmek we olara teklipler hödürlemek.</span></li><li class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Trend seljermeleri we statistik seljermeler etmek.</span></li></ol><p><br></p><p class=\\\"ql-align-center\\\"><strong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Hukuklaryňyz haýsylardyr?</strong></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Bizde saklanan şahsy maglumatlaryňyz hakda maglumat almaga hukugyňyz bardyr. Maglumatlaryňyz ýalňyş ýa-da doly däl bolsa, maglumatlaryňyzyň düzedilmegini ýa-da aýrylmagyny talap edip bilersiňiz.</span></p><p class=\\\"ql-align-justify\\\"><span style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\">Ýokarda ýazylan şertleri okadym, düşündim, kanuna we hukuklaryma laýyklykda hereket etjekdigime borçlanýaryn.</span></p>\",\n        \"ru\": \"<p>russian</p>\",\n        \"en\": \"<p>english</p>\"\n    },\n    \"is_active\": true\n}"
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjc2MTY2NzUsImlkIjo0NCwicm9sZSI6IndvcmtlciJ9.yJrslEcw8DK-OxWcSjysvdNwITAZlgRCxtGkxq2TJ1E",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "Baerer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjc1MzQ4NjEsImlkIjo0MSwicm9sZSI6InVzZXIifQ.c6aNoWKmRtky2XUSE887mWcJ-VmQni_4lgjDyY7ee2k",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "Authorization",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "https://ussa.millihasap.com",
+			"type": "string"
+		},
+		{
+			"key": "loc",
+			"value": "localhost:8080",
+			"type": "string"
+		}
+	]
+}
