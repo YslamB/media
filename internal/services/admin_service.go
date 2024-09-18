@@ -8,6 +8,7 @@ import (
 	"media/internal/repositories"
 	"media/pkg/utils"
 	"mime/multipart"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -57,12 +58,9 @@ func (sr *AdminService) File(ctx context.Context, form *multipart.Form) (any, er
 	filename := fmt.Sprintf("%d%s", timestamp, ext)
 	title := form.Value["title"]
 	description := form.Value["description"]
-	fmt.Println(title)
-	fmt.Println(description)
 	contentType := files[0].Header.Get("Content-Type")
 	fileType := utils.GetType(contentType)
 	uploadFilePath := fmt.Sprintf("./uploads/%s/%d/", fileType, timestamp)
-
 	err := utils.SaveUploadedFile(files[0], uploadFilePath+filename)
 
 	if err != nil {
@@ -81,6 +79,15 @@ func (sr *AdminService) File(ctx context.Context, form *multipart.Form) (any, er
 	return &gin.H{"id": id}, err
 }
 
+func (sr *AdminService) DeleteMusic(ctx context.Context, id string) error {
+	path := sr.repo.GetMusicPath(ctx, id)
+	if path == "" {
+		return errors.New("not found")
+	}
+	os.RemoveAll(filepath.Dir(path))
+	return nil
+}
+
 func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) (any, error) {
 
 	musics := form.File["music"]
@@ -93,7 +100,6 @@ func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) (any, e
 	musicExt := filepath.Ext(musics[0].Filename)
 	imageEXT := filepath.Ext(images[0].Filename)
 
-	fmt.Println(imageEXT)
 	if musicExt != ".mp3" || imageEXT != ".jpg" {
 		return nil, errors.New("invalid file type, must be  .mp3 and .jpg ")
 	}
@@ -102,11 +108,10 @@ func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) (any, e
 	musicFilename := fmt.Sprintf("%d%s", timestamp, musicExt)
 	imageFilename := fmt.Sprintf("%d%s", timestamp, imageEXT)
 	title := form.Value["title"]
+	categoryId := form.Value["category_id"]
 	description := form.Value["description"]
 	language := form.Value["language"]
-
 	uploadMusicFilePath := fmt.Sprintf("./uploads/music/%d/", timestamp)
-
 	err := utils.SaveUploadedFile(musics[0], uploadMusicFilePath+musicFilename)
 
 	if err != nil {
@@ -116,27 +121,42 @@ func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) (any, e
 	err = utils.SaveUploadedFile(images[0], uploadMusicFilePath+imageFilename)
 
 	if err != nil {
+		os.RemoveAll(uploadMusicFilePath)
 		return nil, err
 	}
-	fmt.Println(uploadMusicFilePath + imageFilename)
+
 	err = utils.ResizeImage(uploadMusicFilePath+imageFilename, 700)
+
 	if err != nil {
+		os.RemoveAll(uploadMusicFilePath)
 		return nil, err
 	}
 
-	go utils.ConvertToHLS(uploadMusicFilePath, musicFilename, "music")
+	id, err := sr.repo.Music(ctx, uploadMusicFilePath+fmt.Sprint(timestamp)+"HLS.m3u8",
+		uploadMusicFilePath+imageFilename, title[0], description[0], language[0], categoryId[0])
 
-	id, err := sr.repo.Music(ctx, uploadMusicFilePath+musicFilename, title[0], description[0], language[0])
+	if err == nil {
+		go utils.ConvertToHLS(uploadMusicFilePath, musicFilename, "music")
+	} else {
+		os.RemoveAll(uploadMusicFilePath)
+	}
 
 	return &gin.H{"id": id}, err
+}
+
+func (sr *AdminService) DeleteFilm(ctx context.Context, id string) error {
+	path := sr.repo.GetFilmPath(ctx, id)
+	if path == "" {
+		return errors.New("not found")
+	}
+	os.RemoveAll(filepath.Dir(path))
+	return nil
 }
 
 func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) (any, error) {
 
 	films := form.File["film"]
 	images := form.File["image"]
-	fmt.Println(len(films))
-	fmt.Println(len(images))
 
 	if len(films) == 0 || len(images) == 0 {
 		return nil, errors.New("no films or images found in the request")
@@ -145,7 +165,6 @@ func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) (any, er
 	filmExt := filepath.Ext(films[0].Filename)
 	imageEXT := filepath.Ext(images[0].Filename)
 
-	fmt.Println(imageEXT)
 	if filmExt != ".mp4" || imageEXT != ".jpg" {
 		return nil, errors.New("invalid file type, must be  .mp3 and .jpg ")
 	}
@@ -155,10 +174,9 @@ func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) (any, er
 	imageFilename := fmt.Sprintf("%d%s", timestamp, imageEXT)
 	title := form.Value["title"]
 	description := form.Value["description"]
+	categoryId := form.Value["category_id"]
 	language := form.Value["language"]
-
 	uploadfilmFilePath := fmt.Sprintf("./uploads/film/%d/", timestamp)
-
 	err := utils.SaveUploadedFile(films[0], uploadfilmFilePath+filmFilename)
 
 	if err != nil {
@@ -168,24 +186,95 @@ func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) (any, er
 	err = utils.SaveUploadedFile(images[0], uploadfilmFilePath+imageFilename)
 
 	if err != nil {
+		os.RemoveAll(uploadfilmFilePath)
 		return nil, err
 	}
-	fmt.Println(uploadfilmFilePath + imageFilename)
+
 	err = utils.ResizeImage(uploadfilmFilePath+imageFilename, 700)
+
 	if err != nil {
+		os.RemoveAll(uploadfilmFilePath)
 		return nil, err
 	}
 
-	go utils.ConvertToHLS(uploadfilmFilePath, filmFilename, "film")
+	id, err := sr.repo.Film(ctx, uploadfilmFilePath+fmt.Sprint(timestamp)+"HLS.m3u8", title[0],
+		uploadfilmFilePath+imageFilename, description[0], language[0], categoryId[0])
 
-	id, err := sr.repo.Film(ctx, uploadfilmFilePath+filmFilename, title[0], description[0], language[0])
+	if err == nil {
+		go utils.ConvertToHLS(uploadfilmFilePath, filmFilename, "film")
+	} else {
+		os.RemoveAll(uploadfilmFilePath)
+	}
 
 	return &gin.H{"id": id}, err
 }
 
+func (sr *AdminService) DeleteBook(ctx context.Context, id string) error {
+	path := sr.repo.GetBookPath(ctx, id)
+	if path == "" {
+		return errors.New("not found")
+	}
+	os.RemoveAll(filepath.Dir(path))
+	return nil
+}
+
+func (sr *AdminService) Book(ctx context.Context, form *multipart.Form) (any, int, error) {
+
+	books := form.File["book"]
+	images := form.File["image"]
+
+	if len(books) == 0 || len(images) == 0 {
+		return nil, 400, errors.New("no books or images found in the request")
+	}
+
+	bookExt := filepath.Ext(books[0].Filename)
+	imageEXT := filepath.Ext(images[0].Filename)
+
+	if bookExt != ".pdf" || imageEXT != ".jpg" {
+		return nil, 403, errors.New("invalid file type, must be  .mp3 and .jpg ")
+	}
+
+	timestamp := time.Now().Unix()
+	bookFilename := fmt.Sprintf("%d%s", timestamp, bookExt)
+	imageFilename := fmt.Sprintf("%d%s", timestamp, imageEXT)
+	title := form.Value["title"]
+	description := form.Value["description"]
+	language := form.Value["language"]
+	categoryId := form.Value["category_id"]
+	uploadbookFilePath := fmt.Sprintf("./uploads/book/%d/", timestamp)
+	err := utils.SaveUploadedFile(books[0], uploadbookFilePath+bookFilename)
+
+	if err != nil {
+		return nil, 0, err
+	}
+
+	err = utils.SaveUploadedFile(images[0], uploadbookFilePath+imageFilename)
+
+	if err != nil {
+		os.RemoveAll(uploadbookFilePath)
+		return nil, 0, err
+	}
+
+	err = utils.ResizeImage(uploadbookFilePath+imageFilename, 700)
+
+	if err != nil {
+		os.RemoveAll(uploadbookFilePath)
+		return nil, 0, err
+	}
+
+	id, err := sr.repo.Book(ctx, uploadbookFilePath+bookFilename, uploadbookFilePath+imageFilename,
+		title[0], description[0], language[0], categoryId[0])
+
+	if err != nil {
+		os.RemoveAll(uploadbookFilePath)
+	}
+
+	return &gin.H{"id": id}, 0, err
+}
+
 func (sr *AdminService) AdminLogin(ctx context.Context, admin models.LoginForm) (string, string, error) {
+
 	findedAdmin := sr.repo.GetAdmin(ctx, admin.Username)
-	fmt.Println(findedAdmin.Password)
 	compareError := bcrypt.CompareHashAndPassword(
 		[]byte(findedAdmin.Password), []byte(admin.Password),
 	)

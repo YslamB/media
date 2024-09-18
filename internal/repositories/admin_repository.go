@@ -21,12 +21,40 @@ func (r *AdminRepository) File(ctx context.Context, path, title, desc, fileType 
 	return 1, nil
 }
 
-func (r *AdminRepository) Music(ctx context.Context, path, title, desc, language string) (int, error) {
-	return 1, nil
+func (r *AdminRepository) GetMusicPath(ctx context.Context, id string) string {
+	var path string
+	r.db.QueryRow(ctx, queries.DeleteMusic, id).Scan(&path)
+	return path
 }
 
-func (r *AdminRepository) Film(ctx context.Context, path, title, desc, language string) (int, error) {
-	return 1, nil
+func (r *AdminRepository) GetFilmPath(ctx context.Context, id string) string {
+	var path string
+	r.db.QueryRow(ctx, queries.DeleteFilm, id).Scan(&path)
+	return path
+}
+
+func (r *AdminRepository) GetBookPath(ctx context.Context, id string) string {
+	var path string
+	r.db.QueryRow(ctx, queries.DeleteBook, id).Scan(&path)
+	return path
+}
+
+func (r *AdminRepository) Music(ctx context.Context, path, imagePath, title, desc, language, categoryId string) (string, error) {
+	var id string
+	err := r.db.QueryRow(ctx, queries.CreateMusic, categoryId, language, title, desc, path, imagePath).Scan(&id)
+	return id, err
+}
+
+func (r *AdminRepository) Film(ctx context.Context, path, imagePath, title, desc, language, categoryId string) (string, error) {
+	var id string
+	err := r.db.QueryRow(ctx, queries.CreateFilm, categoryId, language, title, desc, path, imagePath).Scan(&id)
+	return id, err
+}
+
+func (r *AdminRepository) Book(ctx context.Context, path, imagePath, title, desc, language, categoryId string) (string, error) {
+	var id string
+	err := r.db.QueryRow(ctx, queries.CreateBook, categoryId, language, title, desc, path, imagePath).Scan(&id)
+	return id, err
 }
 
 func (r *AdminRepository) GetAdmin(ctx context.Context, username string) models.Admin {

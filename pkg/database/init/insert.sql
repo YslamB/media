@@ -19,3 +19,6 @@ insert into sub_categories (category_id, name) values (3, 'Jazz');
 insert into languages (name) values ('tm');
 insert into languages (name) values ('ru');
 
+
+insert into admins (username, password) values ('admin', '$2a$10$WQlvtdWAZJBMIasjD79tHOIoP051TOpnn9C/7g1pHFpnKCyuSppke');
+

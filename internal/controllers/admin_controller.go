@@ -36,9 +36,7 @@ func (ctrl *AdminController) File(c *gin.Context) {
 	}
 
 	data, err := ctrl.service.File(ctx, form)
-
 	utils.GinResponse(c, 200, data, err, 0)
-
 }
 
 func (ctrl *AdminController) Music(c *gin.Context) {
@@ -52,9 +50,7 @@ func (ctrl *AdminController) Music(c *gin.Context) {
 	}
 
 	data, err := ctrl.service.Music(ctx, form)
-
-	utils.GinResponse(c, 200, data, err, 0)
-
+	utils.GinResponse(c, 201, data, err, 0)
 }
 
 func (ctrl *AdminController) Film(c *gin.Context) {
@@ -68,14 +64,53 @@ func (ctrl *AdminController) Film(c *gin.Context) {
 	}
 
 	data, err := ctrl.service.Film(ctx, form)
+	utils.GinResponse(c, 201, data, err, 0)
+}
 
-	utils.GinResponse(c, 200, data, err, 0)
+func (ctrl *AdminController) Book(c *gin.Context) {
+
+	ctx := c.Request.Context()
+	form, err := c.MultipartForm()
+
+	if err != nil {
+		utils.GinResponse(c, 400, gin.H{"error": "Failed to parse multipart form"}, err, 0)
+		return
+	}
+
+	data, status, err := ctrl.service.Book(ctx, form)
+	utils.GinResponse(c, 201, data, err, status)
+}
+
+func (ctrl *AdminController) DeleteMusic(c *gin.Context) {
+
+	id := c.Param("id")
+	ctx := c.Request.Context()
+	err := ctrl.service.DeleteMusic(ctx, id)
+	utils.GinResponse(c, 200, &gin.H{"message": "deleted"}, err, 404)
+
+}
+
+func (ctrl *AdminController) DeleteFilm(c *gin.Context) {
+
+	id := c.Param("id")
+	ctx := c.Request.Context()
+	err := ctrl.service.DeleteFilm(ctx, id)
+	utils.GinResponse(c, 200, &gin.H{"message": "deleted"}, err, 404)
+
+}
+
+func (ctrl *AdminController) DeleteBook(c *gin.Context) {
+
+	id := c.Param("id")
+	ctx := c.Request.Context()
+	err := ctrl.service.DeleteBook(ctx, id)
+	utils.GinResponse(c, 200, &gin.H{"message": "deleted"}, err, 404)
 
 }
 
 func (ctrl *AdminController) AdminLogin(c *gin.Context) {
-	ctx := c.Request.Context()
 
+	ctx := c.Request.Context()
 	var admin models.LoginForm
 	validationError := c.BindJSON(&admin)
 

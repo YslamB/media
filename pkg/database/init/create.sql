@@ -6,7 +6,7 @@ create table admins (
 );
 
 create table languages (
-    "name" character varying(3) primary key,
+    "name" character varying(2) primary key,
     "created_at" timestamp without time zone default now()
 );
 
@@ -31,7 +31,8 @@ drop table if exists musics;
 create table musics (
     "id" serial primary key not null,
     "sub_category_id" integer not null,
-    "language_id" integer not null,
+    "status" boolean default false,
+    "language" character varying(2) not null,
     "title" character varying(100) not null,
     "description" text not null,
     "path" character varying(100) not null,
@@ -42,8 +43,8 @@ create table musics (
             REFERENCES sub_categories ("id")
                 on update cascade ON DELETE CASCADE,
     CONSTRAINT musics_language_id_fk 
-        FOREIGN KEY ("language_id") 
-            REFERENCES languages ("id")
+        FOREIGN KEY ("language") 
+            REFERENCES languages ("name")
                 on update cascade ON DELETE CASCADE
 );
 
@@ -51,7 +52,8 @@ drop table if exists films;
 create table films (
     "id" serial primary key not null,
     "sub_category_id" integer not null,
-    "language_id" integer not null,
+    "language" character varying(2) not null,
+    "status" boolean default false,
     "title" character varying(100) not null,
     "description" text not null,
     "path" character varying(100) not null,
@@ -62,8 +64,8 @@ create table films (
             REFERENCES sub_categories ("id")
                 on update cascade ON DELETE CASCADE,
     CONSTRAINT musics_language_id_fk 
-        FOREIGN KEY ("language_id") 
-            REFERENCES languages ("id")
+        FOREIGN KEY ("language") 
+            REFERENCES languages ("name")
                 on update cascade ON DELETE CASCADE
 );
 
@@ -71,7 +73,7 @@ drop table if exists books;
 create table books (
     "id" serial primary key not null,
     "sub_category_id" integer not null,
-    "language_id" integer not null,
+    "language" character varying(2) not null,
     "title" character varying(100) not null,
     "description" text not null,
     "path" character varying(100) not null,
@@ -82,7 +84,7 @@ create table books (
             REFERENCES sub_categories ("id")
                 on update cascade ON DELETE CASCADE,
     CONSTRAINT musics_language_id_fk 
-        FOREIGN KEY ("language_id") 
-            REFERENCES languages ("id")
+        FOREIGN KEY ("language") 
+            REFERENCES languages ("name")
                 on update cascade ON DELETE CASCADE
 );

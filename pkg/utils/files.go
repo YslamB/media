@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"image"
@@ -9,6 +10,7 @@ import (
 	"image/png"
 	"io"
 	"media/pkg/config"
+	"media/pkg/database"
 	"mime/multipart"
 	"os"
 	"os/exec"
@@ -132,39 +134,35 @@ func SaveFiles(c *gin.Context) ([]string, error) {
 }
 
 func ResizeImage(imagePath string, width uint) error {
-	// Open the image file
 	file, err := os.Open(imagePath)
+
 	if err != nil {
 		return fmt.Errorf("failed to open image: %w", err)
 	}
-	defer file.Close()
 
-	// Decode the image
+	defer file.Close()
 	img, format, err := image.Decode(file)
+
 	if err != nil {
 		return fmt.Errorf("failed to decode image: %w", err)
 	}
 
-	// Resize the image to the specified width
 	newImage := resize.Resize(width, 0, img, resize.Lanczos3)
-
-	// Close the original file so it can be deleted
 	file.Close()
-
-	// Delete the original image file
 	err = os.Remove(imagePath)
+
 	if err != nil {
 		return fmt.Errorf("failed to delete original image: %w", err)
 	}
 
-	// Create a new file with the same name
 	out, err := os.Create(imagePath)
+
 	if err != nil {
 		return fmt.Errorf("failed to create new image file: %w", err)
 	}
+
 	defer out.Close()
 
-	// Encode and save the resized image
 	switch format {
 	case "jpeg":
 		err = jpeg.Encode(out, newImage, nil)
@@ -173,6 +171,7 @@ func ResizeImage(imagePath string, width uint) error {
 	default:
 		return fmt.Errorf("unsupported image format: %s", format)
 	}
+
 	if err != nil {
 		return fmt.Errorf("failed to save resized image: %w", err)
 	}
@@ -181,52 +180,57 @@ func ResizeImage(imagePath string, width uint) error {
 }
 
 func ConvertToHLS(filepath, filename, runType string) error {
-	// Define the output directory and HLS file names
 
-	// Create the output directory if it doesn't exist
 	if err := os.MkdirAll(filepath, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to create output directory: %v", err)
 	}
+
 	if runType == "film" {
-		// Define the FFmpeg command to convert video to HLS and resize
 		cmd := exec.Command(
 			"ffmpeg",
 			"-i", filepath+filename,
-			// "-c:v", *runType,
-			// "-c:v", "h264_nvenc", //work on gpu //
-			// "-c:v", "hevc_nvenc", //work on gpu //
-			"-c:v", "h264_videotoolbox", //"hevc_videotoolbox", //"h264", //cpu
-			// -hls_segment_filename 'segment_%03d.ts'
+			"-c:v", "h264_videotoolbox",
 			"-flags", "+cgop",
 			"-g", "30",
 			"-hls_time", "10",
 			"-hls_playlist_type", "event",
-			filepath+filename+"HLS.m3u8",
+			filepath+removeExt(filename)+"HLS.m3u8",
 		)
 
-		// Run the FFmpeg command and capture any errors
 		err := cmd.Run()
+
 		if err != nil {
 			return err
 		}
+
+		updateStatus(filepath+removeExt(filename)+"HLS.m3u8", "films")
 		err = os.Remove(filepath + filename)
 		return err
 	}
 
 	cmd := exec.Command("ffmpeg",
-		"-i", filepath+filename, // Input MP3 file
-		"-c:a", "aac", // Use AAC audio codec
-		"-b:a", "128k", // Set audio bitrate to 128kbps
-		"-hls_time", "10", // Segment duration in seconds
+		"-i", filepath+filename,
+		"-c:a", "aac",
+		"-b:a", "128k",
+		"-hls_time", "10",
 		"-hls_playlist_type", "event",
-		filepath+filename+"HLS.m3u8", // Output HLS playlist (.m3u8)
+		filepath+removeExt(filename)+"HLS.m3u8",
 	)
 
 	err := cmd.Run()
-	fmt.Println("HLS conversion completed successfully!:::", err)
-	err = os.Remove(filepath + filename)
 
+	if err == nil {
+		updateStatus(filepath+removeExt(filename)+"HLS.m3u8", "musics")
+	}
+
+	err = os.Remove(filepath + filename)
 	return err
+}
+
+func removeExt(filename string) string {
+	base := filepath.Base(filename)
+	ext := filepath.Ext(base)
+	return base[:len(base)-len(ext)]
 }
 
 func SaveUploadedFile(file *multipart.FileHeader, dst string) error {
@@ -253,6 +257,7 @@ func SaveUploadedFile(file *multipart.FileHeader, dst string) error {
 }
 
 func GetType(contentType string) string {
+
 	switch contentType {
 	case "video/mp4":
 		return "video"
@@ -261,5 +266,10 @@ func GetType(contentType string) string {
 	case "application/pdf":
 		return "book"
 	}
+
 	return "other"
+}
+
+func updateStatus(path, table string) {
+	database.DB.Exec(context.Background(), "update "+table+" set status = true where path = $1", path)
 }
