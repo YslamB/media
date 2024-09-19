@@ -197,7 +197,7 @@ func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) (any, er
 		return nil, err
 	}
 
-	id, err := sr.repo.Film(ctx, uploadfilmFilePath+fmt.Sprint(timestamp)+"HLS.m3u8", title[0],
+	id, err := sr.repo.Film(ctx, title[0], uploadfilmFilePath+fmt.Sprint(timestamp)+"HLS.m3u8",
 		uploadfilmFilePath+imageFilename, description[0], language[0], categoryId[0])
 
 	if err == nil {

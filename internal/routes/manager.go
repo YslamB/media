@@ -2,7 +2,6 @@ package routes
 
 import (
 	"media/internal/controllers"
-	"media/pkg/middlewares"
 
 	"github.com/YslamB/mglogger"
 	"github.com/gin-gonic/gin"
@@ -11,7 +10,7 @@ import (
 
 func SetupRoutes(r *gin.Engine, db *pgxpool.Pool, logger *mglogger.Logger) {
 
-	rClient := r.Group("media/client", middlewares.Guard)
+	rClient := r.Group("media/client")
 	clientController := controllers.NewClientController(db, logger)
 	setupClientRoutes(rClient, clientController)
 

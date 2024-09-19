@@ -1,30 +1,31 @@
 package models
 
-type CreateUser struct {
-	Fullname string `json:"fullname" binding:"required"`
-	Phone    string `json:"phone" binding:"required"`
-	Address  string `json:"address" binding:"required"`
-	Password string `json:"password" binding:"required"`
+type Film struct {
+	Id            int    `json:"id"`
+	SubCategoryId int    `json:"sub_category_id"`
+	Language      string `json:"language"`
+	Title         string `json:"title"`
+	Description   string `json:"description"`
+	Path          string `json:"path"`
+	ImagePath     string `json:"image_path"`
 }
 
-type UpdateUser struct {
-	Fullname string `json:"fullname" binding:"required"`
-	Phone    string `json:"phone" binding:"required"`
-	Address  string `json:"address" binding:"required"`
-	Password string `json:"password" binding:"omitempty"`
+type Music struct {
+	Id            int    `json:"id"`
+	SubCategoryId int    `json:"sub_category_id"`
+	Language      string `json:"language"`
+	Title         string `json:"title"`
+	Description   string `json:"description"`
+	Path          string `json:"path"`
+	ImagePath     string `json:"image_path"`
 }
 
-type BuySubscription struct {
-	SubscriptionID int    `json:"subscription_id" binding:"gt=0"`
-	CardType       string `json:"card_type" binding:"oneof=senagat halkbank"`
-	Expiry         string `json:"expiry" binding:"alphanum,min=6,max=6"`
-	Pan            string `json:"pan" binding:"alphanum,min=16,max=16"`
-	Cvc            string `json:"cvc" binding:"alphanum,min=3,max=3"`
-	Language       string `json:"language" binding:"oneof=ru tk en"`
-}
-
-type ConfirmBuySubscription struct {
-	SubscriptionID int    `json:"subscription_id" binding:"gt=0"`
-	MDOrder        string `json:"md_order" binding:"required"`
-	OTP            string `json:"otp" binding:"alphanum,min=5,max=5"`
+type Book struct {
+	Id            int    `json:"id"`
+	SubCategoryId int    `json:"sub_category_id"`
+	Language      string `json:"language"`
+	Title         string `json:"title"`
+	Description   string `json:"description"`
+	Path          string `json:"path"`
+	ImagePath     string `json:"image_path"`
 }

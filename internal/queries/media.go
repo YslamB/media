@@ -34,3 +34,15 @@ var DeleteFilm = `
 var DeleteBook = `	
 	delete from books where id = $1 returning path;
 `
+
+var GetFilms = `
+	select id, sub_category_id, language, title, description, path, image_path from films offset $1 limit $2;
+`
+
+var GetBooks = `
+	select id, sub_category_id, language, title, description, path, image_path from books offset $1 limit $2;
+`
+
+var GetMusics = `
+	select id, sub_category_id, language, title, description, path, image_path from musics offset $1 limit $2;	
+`

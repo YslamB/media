@@ -8,10 +8,9 @@ import (
 )
 
 func setupClientRoutes(r *gin.RouterGroup, ctrl *controllers.ClientController) {
-	r.GET("/films", middlewares.AdminGuard, middlewares.PageLimitSet, ctrl.Films)
-	// r.POST("/buy-sub", middlewares.UserGuard, ctrl.BuySubscription)
-	// r.PUT("", middlewares.UserGuard, ctrl.UpdateUser)
 
-	// // 				TODO: not delete, just disable user and delete order's files.
-	// r.DELETE("/:id", middlewares.UserGuard, middlewares.ParamIDToInt, ctrl.DeleteUser)
+	r.GET("/films", middlewares.PageLimitSet, ctrl.Films)
+	r.GET("/musics", middlewares.PageLimitSet, ctrl.Books)
+	r.GET("/books", middlewares.PageLimitSet, ctrl.Musics)
+
 }

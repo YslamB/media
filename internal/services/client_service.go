@@ -17,14 +17,17 @@ func NewClientService(db *pgxpool.Pool) *ClientService {
 }
 
 func (us *ClientService) GetUsers(ctx context.Context, id int) (int, error) {
-
-	// otp := response.OTP{}
-	// userPhone := us.repo.CheckUserExist(ctx, user.Phone)
-
-	// if userPhone != "" {
-	// 	return otp
-	// }
-
 	return 1, nil
 
+}
+func (us *ClientService) Films(ctx context.Context, page, limit int) (any, error) {
+	return us.repo.Films(ctx, page, limit)
+}
+
+func (us *ClientService) Books(ctx context.Context, page, limit int) (any, error) {
+	return us.repo.Books(ctx, page, limit)
+}
+
+func (us *ClientService) Musics(ctx context.Context, page, limit int) (any, error) {
+	return us.repo.Musics(ctx, page, limit)
 }
