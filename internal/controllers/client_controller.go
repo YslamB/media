@@ -22,22 +22,28 @@ func (u *ClientController) Films(c *gin.Context) {
 	page := c.MustGet("page").(int)
 	limit := c.MustGet("limit").(int)
 	ctx := c.Request.Context()
-	data, err := u.service.Films(ctx, page, limit)
-	utils.GinResponse(c, 200, data, err, 0)
+	data := u.service.Films(ctx, page, limit)
+	utils.GinResponse(c, data)
 }
 
 func (u *ClientController) Books(c *gin.Context) {
 	page := c.MustGet("page").(int)
 	limit := c.MustGet("limit").(int)
 	ctx := c.Request.Context()
-	data, err := u.service.Books(ctx, page, limit)
-	utils.GinResponse(c, 200, data, err, 0)
+	data := u.service.Books(ctx, page, limit)
+	utils.GinResponse(c, data)
 }
 
 func (u *ClientController) Musics(c *gin.Context) {
 	page := c.MustGet("page").(int)
 	limit := c.MustGet("limit").(int)
 	ctx := c.Request.Context()
-	data, err := u.service.Musics(ctx, page, limit)
-	utils.GinResponse(c, 200, data, err, 0)
+	data := u.service.Musics(ctx, page, limit)
+	utils.GinResponse(c, data)
+}
+
+func (u *ClientController) Categories(c *gin.Context) {
+	ctx := c.Request.Context()
+	data := u.service.Categories(ctx)
+	utils.GinResponse(c, data)
 }

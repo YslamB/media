@@ -36,7 +36,7 @@ var DeleteBook = `
 `
 
 var GetFilms = `
-	select id, sub_category_id, language, title, description, path, image_path from films offset $1 limit $2;
+	select id, sub_category_id, language, title, description, path, image_path from films where status=true offset $1 limit $2;
 `
 
 var GetBooks = `
@@ -44,5 +44,34 @@ var GetBooks = `
 `
 
 var GetMusics = `
-	select id, sub_category_id, language, title, description, path, image_path from musics offset $1 limit $2;	
+	select id, sub_category_id, language, title, description, path, image_path from musics where status=true offset $1 limit $2;	
+`
+
+var CreateCategory = `
+	insert into categories (name) 
+    	values ($1) returning id;
+    
+`
+
+var CreateSubCategory = `
+	insert into sub_categories (category_id, name) 
+    	values ($1, $2) returning id;
+`
+
+var GetCategories = `
+	select 
+    c.id, c.name, sc.sub_categories
+	from categories c
+	left join (
+		select 
+			sc.category_id, 
+			json_agg(
+				json_build_object(
+					'id', sc.id,
+					'name', sc.name
+				) 
+			) as sub_categories
+		from sub_categories sc
+		group by category_id
+	) sc on sc.category_id = c.id
 `

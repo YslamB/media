@@ -271,5 +271,8 @@ func GetType(contentType string) string {
 }
 
 func updateStatus(path, table string) {
-	database.DB.Exec(context.Background(), "update "+table+" set status = true where path = $1", path)
+	fmt.Println("UpdateStatus:", path)
+	_, err := database.DB.Exec(context.Background(), "update "+table+" set status = true where path = $1", path)
+	fmt.Println("err")
+	fmt.Println(err)
 }

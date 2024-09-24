@@ -25,6 +25,7 @@ func InitApp(db *pgxpool.Pool, logger *mglogger.Logger) *gin.Engine {
 
 	// Apply the rate limiter middleware to all routes.
 	// router.Use(middlewares.RateLimiterMiddleware(rl))
+
 	router.Use(middlewares.Cors)
 	router.Use(utils.MGLogger(logger))
 

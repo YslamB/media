@@ -1,22 +1,50 @@
 package utils
 
 import (
+	"media/internal/models"
+
 	"github.com/gin-gonic/gin"
 )
 
-func GinResponse(c *gin.Context, status int, data any, err error, errorStatus int) {
+func GinResponse(c *gin.Context, data models.Response) {
 
-	if err != nil {
-		Log.Println(err.Error())
+	switch data.Status {
+	case 0:
+		c.JSON(200, data.Data)
+		return
 
-		if errorStatus != 0 {
-			c.JSON(errorStatus, err.Error())
-			return
-		}
+	case 200:
+		c.JSON(200, data.Data)
+		return
 
-		c.JSON(500, err.Error())
+	case 201:
+		c.JSON(201, data.Data)
+		return
+
+	case 400:
+		Log.Println(data.Error.Error())
+		c.JSON(400, models.InvalidInput)
+		return
+
+	case 404:
+		Log.Println(data.Error.Error())
+		c.JSON(404, models.NotFound)
+		return
+
+	case 409:
+		Log.Println(data.Error.Error())
+		c.JSON(409, models.Conflict)
+		return
+
+	case 500:
+		Log.Errorln(data.Error.Error())
+		c.JSON(500, models.InternalServerError)
+		return
+
+	default:
+		Log.Errorln(data.Error.Error())
+		c.JSON(500, models.InternalServerError)
 		return
 	}
 
-	c.JSON(status, data)
 }

@@ -12,14 +12,14 @@ create table languages (
 
 create table categories (
     "id" serial primary key,
-    "name" character varying(100),
+    "name" JSONB NOT NULL,
     "created_at" timestamp without time zone default now()
 );
 
 create table sub_categories(
     "id" serial primary key,
     "category_id" integer,
-    "name" character varying(100),
+    "name" JSONB NOT NULL,
     "created_at" timestamp without time zone default now(),
     CONSTRAINT sub_categories_category_id_fk 
         FOREIGN KEY ("category_id") 
@@ -88,3 +88,5 @@ create table books (
             REFERENCES languages ("name")
                 on update cascade ON DELETE CASCADE
 );
+
+

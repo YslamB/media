@@ -29,26 +29,51 @@ func (r *ClientRepository) GetUsers(ctx context.Context, page, limit int) (int, 
 	return 1, nil
 }
 
-func (r *ClientRepository) Films(ctx context.Context, page, limit int) ([]models.Film, error) {
+func (r *ClientRepository) Films(ctx context.Context, page, limit int) models.Response {
 	offset := page*limit - limit
 	var data []models.Film
 	err := pgxscan.Select(ctx, r.db, &data, queries.GetFilms, offset, limit)
 
-	return data, err
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: data}
 }
 
-func (r *ClientRepository) Books(ctx context.Context, page, limit int) ([]models.Book, error) {
+func (r *ClientRepository) Books(ctx context.Context, page, limit int) models.Response {
 	offset := page*limit - limit
 	var data []models.Book
 	err := pgxscan.Select(ctx, r.db, &data, queries.GetBooks, offset, limit)
 
-	return data, err
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: data}
 }
 
-func (r *ClientRepository) Musics(ctx context.Context, page, limit int) ([]models.Music, error) {
+func (r *ClientRepository) Musics(ctx context.Context, page, limit int) models.Response {
 	offset := page*limit - limit
 	var data []models.Music
 	err := pgxscan.Select(ctx, r.db, &data, queries.GetMusics, offset, limit)
 
-	return data, err
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: data}
+}
+
+func (r *ClientRepository) Categories(ctx context.Context) models.Response {
+
+	var data []models.Categories
+	err := pgxscan.Select(ctx, r.db, &data, queries.GetCategories)
+
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: data}
+
 }

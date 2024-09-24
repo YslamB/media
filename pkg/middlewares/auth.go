@@ -43,7 +43,7 @@ func Guard(c *gin.Context) {
 		return
 	}
 
-	c.Set("id", int(claims["id"].(float64)))
+	c.Set("id", claims["id"].(string))
 	c.Set("role", claims["role"])
 
 	c.Next()
@@ -53,39 +53,6 @@ func AdminGuard(c *gin.Context) {
 	role := c.MustGet("role").(string)
 
 	if role != "admin" {
-		c.AbortWithStatus(403)
-		return
-	}
-
-	c.Next()
-}
-
-func WorkerGuard(c *gin.Context) {
-	role := c.MustGet("role").(string)
-
-	if role != "worker" {
-		c.AbortWithStatus(403)
-		return
-	}
-
-	c.Next()
-}
-
-func UserGuard(c *gin.Context) {
-	role := c.MustGet("role").(string)
-
-	if role != "user" {
-		c.AbortWithStatus(403)
-		return
-	}
-
-	c.Next()
-}
-
-func UserOrAdminGuard(c *gin.Context) {
-	role := c.MustGet("role").(string)
-
-	if role != "user" && role != "admin" {
 		c.AbortWithStatus(403)
 		return
 	}

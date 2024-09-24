@@ -21,22 +21,8 @@ func NewAdminController(db *pgxpool.Pool, logger *mglogger.Logger) *AdminControl
 
 func (ctrl *AdminController) GetUsers(c *gin.Context) {
 	ctx := c.Request.Context()
-	data, err := ctrl.service.GetUsers(ctx, 1)
-	utils.GinResponse(c, 200, data, err, 0)
-}
-
-func (ctrl *AdminController) File(c *gin.Context) {
-
-	ctx := c.Request.Context()
-	form, err := c.MultipartForm()
-
-	if err != nil {
-		utils.GinResponse(c, 400, gin.H{"error": "Failed to parse multipart form"}, err, 0)
-		return
-	}
-
-	data, err := ctrl.service.File(ctx, form)
-	utils.GinResponse(c, 200, data, err, 0)
+	data := ctrl.service.GetUsers(ctx, 1)
+	utils.GinResponse(c, data)
 }
 
 func (ctrl *AdminController) Music(c *gin.Context) {
@@ -45,12 +31,12 @@ func (ctrl *AdminController) Music(c *gin.Context) {
 	form, err := c.MultipartForm()
 
 	if err != nil {
-		utils.GinResponse(c, 400, gin.H{"error": "Failed to parse multipart form"}, err, 0)
+		utils.GinResponse(c, models.Response{Status: 400, Error: err})
 		return
 	}
 
-	data, err := ctrl.service.Music(ctx, form)
-	utils.GinResponse(c, 201, data, err, 0)
+	data := ctrl.service.Music(ctx, form)
+	utils.GinResponse(c, data)
 }
 
 func (ctrl *AdminController) Film(c *gin.Context) {
@@ -59,12 +45,12 @@ func (ctrl *AdminController) Film(c *gin.Context) {
 	form, err := c.MultipartForm()
 
 	if err != nil {
-		utils.GinResponse(c, 400, gin.H{"error": "Failed to parse multipart form"}, err, 0)
+		utils.GinResponse(c, models.Response{Status: 400, Error: err})
 		return
 	}
 
-	data, err := ctrl.service.Film(ctx, form)
-	utils.GinResponse(c, 201, data, err, 0)
+	data := ctrl.service.Film(ctx, form)
+	utils.GinResponse(c, data)
 }
 
 func (ctrl *AdminController) Book(c *gin.Context) {
@@ -73,20 +59,20 @@ func (ctrl *AdminController) Book(c *gin.Context) {
 	form, err := c.MultipartForm()
 
 	if err != nil {
-		utils.GinResponse(c, 400, gin.H{"error": "Failed to parse multipart form"}, err, 0)
+		utils.GinResponse(c, models.Response{Status: 400, Error: err})
 		return
 	}
 
-	data, status, err := ctrl.service.Book(ctx, form)
-	utils.GinResponse(c, 201, data, err, status)
+	data := ctrl.service.Book(ctx, form)
+	utils.GinResponse(c, data)
 }
 
 func (ctrl *AdminController) DeleteMusic(c *gin.Context) {
 
 	id := c.Param("id")
 	ctx := c.Request.Context()
-	err := ctrl.service.DeleteMusic(ctx, id)
-	utils.GinResponse(c, 200, &gin.H{"message": "deleted"}, err, 404)
+	data := ctrl.service.DeleteMusic(ctx, id)
+	utils.GinResponse(c, data)
 
 }
 
@@ -94,8 +80,8 @@ func (ctrl *AdminController) DeleteFilm(c *gin.Context) {
 
 	id := c.Param("id")
 	ctx := c.Request.Context()
-	err := ctrl.service.DeleteFilm(ctx, id)
-	utils.GinResponse(c, 200, &gin.H{"message": "deleted"}, err, 404)
+	data := ctrl.service.DeleteFilm(ctx, id)
+	utils.GinResponse(c, data)
 
 }
 
@@ -103,8 +89,8 @@ func (ctrl *AdminController) DeleteBook(c *gin.Context) {
 
 	id := c.Param("id")
 	ctx := c.Request.Context()
-	err := ctrl.service.DeleteBook(ctx, id)
-	utils.GinResponse(c, 200, &gin.H{"message": "deleted"}, err, 404)
+	data := ctrl.service.DeleteBook(ctx, id)
+	utils.GinResponse(c, data)
 
 }
 
@@ -115,18 +101,48 @@ func (ctrl *AdminController) AdminLogin(c *gin.Context) {
 	validationError := c.BindJSON(&admin)
 
 	if validationError != nil {
-		ctrl.logger.Println(validationError.Error())
-		c.JSON(400, validationError.Error())
+		utils.GinResponse(c, models.Response{Status: 400, Error: validationError})
 		return
 	}
 
 	acsessT, refT, err := ctrl.service.AdminLogin(ctx, admin)
 
 	if err != nil {
-		ctrl.logger.Println(err.Error())
-		c.JSON(400, err.Error())
+		utils.GinResponse(c, models.Response{Status: 500, Error: err})
 		return
 	}
 
-	c.JSON(200, gin.H{"access_token": acsessT, "refresh_token": refT})
+	utils.GinResponse(c, models.Response{Data: gin.H{"access_token": acsessT, "refresh_token": refT}})
+}
+
+func (ctrl *AdminController) Category(c *gin.Context) {
+
+	ctx := c.Request.Context()
+	var category models.Category
+	validationError := c.BindJSON(&category)
+
+	if validationError != nil {
+		utils.GinResponse(c, models.Response{Status: 400, Error: validationError})
+		return
+	}
+
+	data := ctrl.service.Category(ctx, category)
+	utils.GinResponse(c, data)
+
+}
+
+func (ctrl *AdminController) SubCategory(c *gin.Context) {
+
+	ctx := c.Request.Context()
+	var category models.Category
+	validationError := c.BindJSON(&category)
+
+	if validationError != nil {
+		utils.GinResponse(c, models.Response{Status: 400, Error: validationError})
+		return
+	}
+
+	data := ctrl.service.SubCategory(ctx, category)
+	utils.GinResponse(c, data)
+
 }

@@ -23,85 +23,37 @@ type AdminService struct {
 
 func NewAdminService(db *pgxpool.Pool) *AdminService {
 	return &AdminService{repositories.NewAdminRepository(db)}
+}
+
+func (us *AdminService) GetUsers(ctx context.Context, id int) models.Response {
+
+	return models.Response{Data: "users"}
 
 }
 
-func (us *AdminService) GetUsers(ctx context.Context, id int) (int, error) {
-
-	// otp := response.OTP{}
-	// userPhone := us.repo.CheckUserExist(ctx, user.Phone)
-
-	// if userPhone != "" {
-	// 	return otp
-	// }
-
-	return 1, nil
-
-}
-
-func (sr *AdminService) File(ctx context.Context, form *multipart.Form) (any, error) {
-
-	files := form.File["file"]
-
-	if len(files) == 0 {
-		return nil, errors.New("no files found in the request")
-	}
-
-	ext := filepath.Ext(files[0].Filename)
-	validExtensions := map[string]bool{".mp4": true, ".mp3": true, ".pdf": true}
-
-	if !validExtensions[ext] {
-		return nil, errors.New("invalid file type, must be .mp4, .mp3 or .pdf")
-	}
-
-	timestamp := time.Now().Unix()
-	filename := fmt.Sprintf("%d%s", timestamp, ext)
-	title := form.Value["title"]
-	description := form.Value["description"]
-	contentType := files[0].Header.Get("Content-Type")
-	fileType := utils.GetType(contentType)
-	uploadFilePath := fmt.Sprintf("./uploads/%s/%d/", fileType, timestamp)
-	err := utils.SaveUploadedFile(files[0], uploadFilePath+filename)
-
-	if err != nil {
-		return nil, err
-	}
-
-	switch fileType {
-	case "video":
-		go utils.ConvertToHLS(uploadFilePath, filename, "video")
-	case "audio":
-		go utils.ConvertToHLS(uploadFilePath, filename, "audio")
-	}
-
-	id, err := sr.repo.File(ctx, uploadFilePath+filename, title[0], description[0], fileType)
-
-	return &gin.H{"id": id}, err
-}
-
-func (sr *AdminService) DeleteMusic(ctx context.Context, id string) error {
+func (sr *AdminService) DeleteMusic(ctx context.Context, id string) models.Response {
 	path := sr.repo.GetMusicPath(ctx, id)
 	if path == "" {
-		return errors.New("not found")
+		return models.Response{Error: errors.New("not found"), Status: 404}
 	}
 	os.RemoveAll(filepath.Dir(path))
-	return nil
+	return models.Response{Data: gin.H{"message": "deleted"}}
 }
 
-func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) (any, error) {
+func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) models.Response {
 
 	musics := form.File["music"]
 	images := form.File["image"]
 
 	if len(musics) == 0 || len(images) == 0 {
-		return nil, errors.New("no musics or images found in the request")
+		return models.Response{Error: errors.New("no musics or images found in the request"), Status: 400}
 	}
 
 	musicExt := filepath.Ext(musics[0].Filename)
 	imageEXT := filepath.Ext(images[0].Filename)
 
 	if musicExt != ".mp3" || imageEXT != ".jpg" {
-		return nil, errors.New("invalid file type, must be  .mp3 and .jpg ")
+		return models.Response{Error: errors.New("invalid file type, must be  .mp3 and .jpg "), Status: 400}
 	}
 
 	timestamp := time.Now().Unix()
@@ -115,21 +67,21 @@ func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) (any, e
 	err := utils.SaveUploadedFile(musics[0], uploadMusicFilePath+musicFilename)
 
 	if err != nil {
-		return nil, err
+		return models.Response{Error: err, Status: 500}
 	}
 
 	err = utils.SaveUploadedFile(images[0], uploadMusicFilePath+imageFilename)
 
 	if err != nil {
 		os.RemoveAll(uploadMusicFilePath)
-		return nil, err
+		return models.Response{Error: err, Status: 500}
 	}
 
 	err = utils.ResizeImage(uploadMusicFilePath+imageFilename, 700)
 
 	if err != nil {
 		os.RemoveAll(uploadMusicFilePath)
-		return nil, err
+		return models.Response{Error: err, Status: 500}
 	}
 
 	id, err := sr.repo.Music(ctx, uploadMusicFilePath+fmt.Sprint(timestamp)+"HLS.m3u8",
@@ -139,34 +91,42 @@ func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) (any, e
 		go utils.ConvertToHLS(uploadMusicFilePath, musicFilename, "music")
 	} else {
 		os.RemoveAll(uploadMusicFilePath)
+		return models.Response{Error: err, Status: 500}
 	}
 
-	return &gin.H{"id": id}, err
+	return models.Response{Data: &gin.H{"id": id}}
 }
 
-func (sr *AdminService) DeleteFilm(ctx context.Context, id string) error {
+func (sr *AdminService) DeleteFilm(ctx context.Context, id string) models.Response {
 	path := sr.repo.GetFilmPath(ctx, id)
+
 	if path == "" {
-		return errors.New("not found")
+		return models.Response{Error: errors.New("not found"), Status: 404}
 	}
-	os.RemoveAll(filepath.Dir(path))
-	return nil
+
+	err := os.RemoveAll(filepath.Dir(path))
+
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: gin.H{"message": "deleted"}}
 }
 
-func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) (any, error) {
+func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) models.Response {
 
 	films := form.File["film"]
 	images := form.File["image"]
 
 	if len(films) == 0 || len(images) == 0 {
-		return nil, errors.New("no films or images found in the request")
+		return models.Response{Error: errors.New("no films or images found in the request"), Status: 400}
 	}
 
 	filmExt := filepath.Ext(films[0].Filename)
 	imageEXT := filepath.Ext(images[0].Filename)
 
 	if filmExt != ".mp4" || imageEXT != ".jpg" {
-		return nil, errors.New("invalid file type, must be  .mp3 and .jpg ")
+		return models.Response{Error: errors.New("invalid file type, must be  .mp3 and .jpg "), Status: 400}
 	}
 
 	timestamp := time.Now().Unix()
@@ -180,21 +140,21 @@ func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) (any, er
 	err := utils.SaveUploadedFile(films[0], uploadfilmFilePath+filmFilename)
 
 	if err != nil {
-		return nil, err
+		return models.Response{Error: err, Status: 500}
 	}
 
 	err = utils.SaveUploadedFile(images[0], uploadfilmFilePath+imageFilename)
 
 	if err != nil {
 		os.RemoveAll(uploadfilmFilePath)
-		return nil, err
+		return models.Response{Error: err, Status: 500}
 	}
 
 	err = utils.ResizeImage(uploadfilmFilePath+imageFilename, 700)
 
 	if err != nil {
 		os.RemoveAll(uploadfilmFilePath)
-		return nil, err
+		return models.Response{Error: err, Status: 500}
 	}
 
 	id, err := sr.repo.Film(ctx, title[0], uploadfilmFilePath+fmt.Sprint(timestamp)+"HLS.m3u8",
@@ -204,34 +164,38 @@ func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) (any, er
 		go utils.ConvertToHLS(uploadfilmFilePath, filmFilename, "film")
 	} else {
 		os.RemoveAll(uploadfilmFilePath)
+		return models.Response{Error: err, Status: 500}
 	}
 
-	return &gin.H{"id": id}, err
+	return models.Response{Data: &gin.H{"id": id}}
 }
 
-func (sr *AdminService) DeleteBook(ctx context.Context, id string) error {
+func (sr *AdminService) DeleteBook(ctx context.Context, id string) models.Response {
 	path := sr.repo.GetBookPath(ctx, id)
+
 	if path == "" {
-		return errors.New("not found")
+		return models.Response{Error: errors.New("not found"), Status: 404}
 	}
+
 	os.RemoveAll(filepath.Dir(path))
-	return nil
+
+	return models.Response{Data: gin.H{"message": "deleted"}}
 }
 
-func (sr *AdminService) Book(ctx context.Context, form *multipart.Form) (any, int, error) {
+func (sr *AdminService) Book(ctx context.Context, form *multipart.Form) models.Response {
 
 	books := form.File["book"]
 	images := form.File["image"]
 
 	if len(books) == 0 || len(images) == 0 {
-		return nil, 400, errors.New("no books or images found in the request")
+		return models.Response{Error: errors.New("no books or images found in the request"), Status: 400}
 	}
 
 	bookExt := filepath.Ext(books[0].Filename)
 	imageEXT := filepath.Ext(images[0].Filename)
 
 	if bookExt != ".pdf" || imageEXT != ".jpg" {
-		return nil, 403, errors.New("invalid file type, must be  .mp3 and .jpg ")
+		return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
 	}
 
 	timestamp := time.Now().Unix()
@@ -245,21 +209,21 @@ func (sr *AdminService) Book(ctx context.Context, form *multipart.Form) (any, in
 	err := utils.SaveUploadedFile(books[0], uploadbookFilePath+bookFilename)
 
 	if err != nil {
-		return nil, 0, err
+		return models.Response{Error: err, Status: 500}
 	}
 
 	err = utils.SaveUploadedFile(images[0], uploadbookFilePath+imageFilename)
 
 	if err != nil {
 		os.RemoveAll(uploadbookFilePath)
-		return nil, 0, err
+		return models.Response{Error: err, Status: 500}
 	}
 
 	err = utils.ResizeImage(uploadbookFilePath+imageFilename, 700)
 
 	if err != nil {
 		os.RemoveAll(uploadbookFilePath)
-		return nil, 0, err
+		return models.Response{Error: err, Status: 500}
 	}
 
 	id, err := sr.repo.Book(ctx, uploadbookFilePath+bookFilename, uploadbookFilePath+imageFilename,
@@ -267,9 +231,10 @@ func (sr *AdminService) Book(ctx context.Context, form *multipart.Form) (any, in
 
 	if err != nil {
 		os.RemoveAll(uploadbookFilePath)
+		return models.Response{Error: err, Status: 500}
 	}
 
-	return &gin.H{"id": id}, 0, err
+	return models.Response{Data: &gin.H{"id": id}}
 }
 
 func (sr *AdminService) AdminLogin(ctx context.Context, admin models.LoginForm) (string, string, error) {
@@ -285,4 +250,28 @@ func (sr *AdminService) AdminLogin(ctx context.Context, admin models.LoginForm) 
 
 	accessToken, refreshToken := utils.CreateRefreshAccsessToken(findedAdmin.Username, "admin")
 	return accessToken, refreshToken, nil
+}
+
+func (sr *AdminService) Category(ctx context.Context, ctg models.Category) models.Response {
+
+	id, err := sr.repo.CreateCategory(ctx, ctg)
+
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: gin.H{"id": id}}
+
+}
+
+func (sr *AdminService) SubCategory(ctx context.Context, ctg models.Category) models.Response {
+
+	id, err := sr.repo.CreateSubCategory(ctx, ctg)
+
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: gin.H{"id": id}}
+
 }

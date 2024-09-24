@@ -45,7 +45,7 @@ func (r *AdminRepository) Music(ctx context.Context, path, imagePath, title, des
 	return id, err
 }
 
-func (r *AdminRepository) Film(ctx context.Context, path, imagePath, title, desc, language, categoryId string) (string, error) {
+func (r *AdminRepository) Film(ctx context.Context, title, path, imagePath, desc, language, categoryId string) (string, error) {
 	var id string
 	err := r.db.QueryRow(ctx, queries.CreateFilm, categoryId, language, title, desc, path, imagePath).Scan(&id)
 	return id, err
@@ -66,4 +66,23 @@ func (r *AdminRepository) GetAdmin(ctx context.Context, username string) models.
 	fmt.Println(err)
 
 	return admin
+}
+
+func (r *AdminRepository) CreateCategory(ctx context.Context, ctg models.Category) (int, error) {
+
+	jsonData := fmt.Sprintf(`{"ru": "%s", "tm": "%s"}`, ctg.Ru, ctg.Tm)
+	var id int
+	err := r.db.QueryRow(ctx, queries.CreateCategory, jsonData).Scan(&id)
+	return id, err
+
+}
+
+func (r *AdminRepository) CreateSubCategory(ctx context.Context, ctg models.Category) (int, error) {
+
+	jsonData := fmt.Sprintf(`{"ru": "%s", "tm": "%s"}`, ctg.Ru, ctg.Tm)
+	var id int
+	fmt.Println(ctg.ID)
+	err := r.db.QueryRow(ctx, queries.CreateSubCategory, ctg.ID, jsonData).Scan(&id)
+	return id, err
+
 }
