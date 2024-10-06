@@ -1,5 +1,3 @@
-
-
 insert into languages (name) values ('tm');
 insert into languages (name) values ('ru');
 

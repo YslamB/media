@@ -5,13 +5,11 @@ dev:
 db:
 	@echo "Initializing media database..."
 	@psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d postgres \
-		-f ./database/init/init.sql
+		-f ./pkg/database/init/init.sql
 	@psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d media \
-		-f ./database/init/create.sql
+		-f ./pkg/database/init/create.sql
 	@psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d media \
-		-f ./database/init/insert.sql
-	@psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d media \
-		-f ./database/init/functions.sql
+		-f ./pkg/database/init/insert.sql
 	@echo "Has been successfully created"
 build:
 	@echo "Building the app, please wait..."
