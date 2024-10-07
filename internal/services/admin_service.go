@@ -52,8 +52,16 @@ func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) models.
 	musicExt := filepath.Ext(musics[0].Filename)
 	imageEXT := filepath.Ext(images[0].Filename)
 
-	if musicExt != ".mp3" || imageEXT != ".jpg" {
-		return models.Response{Error: errors.New("invalid file type, must be  .mp3 and .jpg "), Status: 400}
+	allowedImageExts := map[string]bool{
+		".jpg":  true,
+		".jpeg": true,
+		".png":  true,
+		".webp": true,
+	}
+
+	// Check if the music extension is valid and the image extension exists in the map
+	if musicExt != ".mp3" || !allowedImageExts[imageEXT] {
+		return models.Response{Error: errors.New("invalid file type, must be .mp3 and a valid image (.jpg, .jpeg, .png, .gif)"), Status: 400}
 	}
 
 	timestamp := time.Now().Unix()
@@ -77,15 +85,15 @@ func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) models.
 		return models.Response{Error: err, Status: 500}
 	}
 
-	err = utils.ResizeImage(uploadMusicFilePath+imageFilename, 700)
+	status, err := utils.ResizeImage(uploadMusicFilePath+imageFilename, 700)
 
 	if err != nil {
 		os.RemoveAll(uploadMusicFilePath)
-		return models.Response{Error: err, Status: 500}
+		return models.Response{Error: err, Status: status}
 	}
 
-	id, err := sr.repo.Music(ctx, uploadMusicFilePath+fmt.Sprint(timestamp)+"HLS.m3u8",
-		uploadMusicFilePath+imageFilename, title[0], description[0], language[0], categoryId[0])
+	id, err := sr.repo.Music(ctx, uploadMusicFilePath[1:]+fmt.Sprint(timestamp)+"HLS.m3u8",
+		uploadMusicFilePath[1:]+imageFilename, title[0], description[0], language[0], categoryId[0])
 
 	if err == nil {
 		go utils.ConvertToHLS(uploadMusicFilePath, musicFilename, "music")
@@ -125,8 +133,15 @@ func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) models.R
 	filmExt := filepath.Ext(films[0].Filename)
 	imageEXT := filepath.Ext(images[0].Filename)
 
-	if filmExt != ".mp4" || imageEXT != ".jpg" {
-		return models.Response{Error: errors.New("invalid file type, must be  .mp3 and .jpg "), Status: 400}
+	allowedImageExts := map[string]bool{
+		".jpg":  true,
+		".jpeg": true,
+		".png":  true,
+		".webp": true,
+	}
+
+	if filmExt != ".mp4" || !allowedImageExts[imageEXT] {
+		return models.Response{Error: errors.New("invalid file type, must be  .mp4 and .jpg "), Status: 400}
 	}
 
 	timestamp := time.Now().Unix()
@@ -150,15 +165,15 @@ func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) models.R
 		return models.Response{Error: err, Status: 500}
 	}
 
-	err = utils.ResizeImage(uploadfilmFilePath+imageFilename, 700)
+	status, err := utils.ResizeImage(uploadfilmFilePath+imageFilename, 700)
 
 	if err != nil {
 		os.RemoveAll(uploadfilmFilePath)
-		return models.Response{Error: err, Status: 500}
+		return models.Response{Error: err, Status: status}
 	}
 
-	id, err := sr.repo.Film(ctx, title[0], uploadfilmFilePath+fmt.Sprint(timestamp)+"HLS.m3u8",
-		uploadfilmFilePath+imageFilename, description[0], language[0], categoryId[0])
+	id, err := sr.repo.Film(ctx, title[0], uploadfilmFilePath[1:]+fmt.Sprint(timestamp)+"HLS.m3u8",
+		uploadfilmFilePath[1:]+imageFilename, description[0], language[0], categoryId[0])
 
 	if err == nil {
 		go utils.ConvertToHLS(uploadfilmFilePath, filmFilename, "film")
@@ -219,14 +234,14 @@ func (sr *AdminService) Book(ctx context.Context, form *multipart.Form) models.R
 		return models.Response{Error: err, Status: 500}
 	}
 
-	err = utils.ResizeImage(uploadbookFilePath+imageFilename, 700)
+	status, err := utils.ResizeImage(uploadbookFilePath+imageFilename, 700)
 
 	if err != nil {
 		os.RemoveAll(uploadbookFilePath)
-		return models.Response{Error: err, Status: 500}
+		return models.Response{Error: err, Status: status}
 	}
 
-	id, err := sr.repo.Book(ctx, uploadbookFilePath+bookFilename, uploadbookFilePath+imageFilename,
+	id, err := sr.repo.Book(ctx, uploadbookFilePath[1:]+bookFilename, uploadbookFilePath[1:]+imageFilename,
 		title[0], description[0], language[0], categoryId[0])
 
 	if err != nil {

@@ -31,7 +31,7 @@ func (r *ClientRepository) GetUsers(ctx context.Context, page, limit int) (int, 
 
 func (r *ClientRepository) Films(ctx context.Context, page, limit int) models.Response {
 	offset := page*limit - limit
-	var data []models.Film
+	var data = make([]models.Film, 0)
 	err := pgxscan.Select(ctx, r.db, &data, queries.GetFilms, offset, limit)
 
 	if err != nil {

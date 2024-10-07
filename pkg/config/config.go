@@ -11,32 +11,33 @@ import (
 var SocketClients = map[string]*websocket.Conn{}
 
 type Config struct {
-	API_URL            string
-	UPLOAD_PATH        string
-	DB_HOST            string
-	DB_PORT            string
-	DB_USER            string
-	DB_PASSWORD        string
-	DB_NAME            string
-	ACCESS_KEY         string
-	ACCESS_TIME        time.Duration
-	REFRESH_KEY        string
-	REFRESH_TIME       time.Duration
-	SMS_API            string
-	SMS_API_KEY        string
-	PAYMENT_API        string
-	PAYMENT_SESSION    int
-	SENAGAT_USERNAME   string
-	SENAGAT_PASSWORD   string
-	HALKBANK_USERNAME  string
-	HALKBANK_PASSWORD  string
-	RYSGAL_USERNAME    string
-	RYSGAL_PASSWORD    string
-	APP_VERSION        string
-	API_PORT           string
-	GIN_MODE           string
-	LOGGER_FOLDER_PATH string
-	LOGGER_FILENAME    string
+	API_URL            string        `json:"api_url" binding:"required"`
+	UPLOAD_PATH        string        `json:"upload_path" binding:"required"`
+	DB_HOST            string        `json:"db_host" binding:"required"`
+	DB_PORT            string        `json:"db_port" binding:"required"`
+	DB_USER            string        `json:"db_user" binding:"required"`
+	DB_PASSWORD        string        `json:"db_password" binding:"required"`
+	DB_NAME            string        `json:"db_name" binding:"required"`
+	ACCESS_KEY         string        `json:"access_key" binding:"required"`
+	ACCESS_TIME        time.Duration `json:"access_time" binding:"required"`
+	REFRESH_KEY        string        `json:"refresh_key" binding:"required"`
+	REFRESH_TIME       time.Duration `json:"refresh_time" binding:"required"`
+	SMS_API            string        `json:"sms_api" binding:"required"`
+	SMS_API_KEY        string        `json:"sms_api_key" binding:"required"`
+	PAYMENT_API        string        `json:"payment_api" binding:"required"`
+	PAYMENT_SESSION    int           `json:"payment_session" binding:"required"`
+	SENAGAT_USERNAME   string        `json:"senagat_username" binding:"required"`
+	SENAGAT_PASSWORD   string        `json:"senagat_password" binding:"required"`
+	HALKBANK_USERNAME  string        `json:"halkbank_username" binding:"required"`
+	HALKBANK_PASSWORD  string        `json:"halkbank_password" binding:"required"`
+	RYSGAL_USERNAME    string        `json:"rysgal_username" binding:"required"`
+	RYSGAL_PASSWORD    string        `json:"rysgal_password" binding:"required"`
+	APP_VERSION        string        `json:"app_ve rsion" binding:"required"`
+	API_PORT           string        `json:"api_port" binding:"required"`
+	GIN_MODE           string        `json:"gin_mode" binding:"required"`
+	LOGGER_FOLDER_PATH string        `json:"logger_folder_path" binding:"required"`
+	LOGGER_FILENAME    string        `json:"logger_filename" binding:"required"`
+	HLS_RUN_ON         string        `json:"hls_run_on" binding:"required"`
 }
 
 var ENV Config
@@ -65,4 +66,5 @@ func InitConfig() {
 	ENV.REFRESH_TIME = RT
 
 	ENV.APP_VERSION = os.Getenv("APP_VERSION")
+	ENV.HLS_RUN_ON = os.Getenv("HLS_RUN_ON")
 }
