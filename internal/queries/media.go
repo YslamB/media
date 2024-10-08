@@ -75,3 +75,7 @@ var GetCategories = `
 		group by category_id
 	) sc on sc.category_id = c.id
 `
+
+var UpdateBook = `
+	update books set sub_category_id=$1, language=$2, title=$3, description=$4 where id=$5 returning path, image_path;
+`

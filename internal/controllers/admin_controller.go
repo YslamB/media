@@ -67,6 +67,20 @@ func (ctrl *AdminController) Book(c *gin.Context) {
 	utils.GinResponse(c, data)
 }
 
+func (ctrl *AdminController) UpdateBook(c *gin.Context) {
+
+	ctx := c.Request.Context()
+	form, err := c.MultipartForm()
+
+	if err != nil {
+		utils.GinResponse(c, models.Response{Status: 400, Error: err})
+		return
+	}
+
+	data := ctrl.service.UpdateBook(ctx, form)
+	utils.GinResponse(c, data)
+}
+
 func (ctrl *AdminController) DeleteMusic(c *gin.Context) {
 
 	id := c.Param("id")

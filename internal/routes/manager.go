@@ -24,6 +24,8 @@ func SetupRoutes(r *gin.Engine, db *pgxpool.Pool, logger *mglogger.Logger) {
 	rAdmin := r.Group("media/admin", middlewares.Guard)
 	adminC := controllers.NewAdminController(db, logger)
 
+	r.POST("/login", adminC.AdminLogin)
+
 	{
 		rAdmin.GET("", middlewares.AdminGuard, adminC.GetUsers)
 		rAdmin.POST("/category", middlewares.AdminGuard, adminC.Category)
@@ -31,7 +33,9 @@ func SetupRoutes(r *gin.Engine, db *pgxpool.Pool, logger *mglogger.Logger) {
 		rAdmin.POST("/music", middlewares.AdminGuard, adminC.Music)
 		rAdmin.POST("/film", middlewares.AdminGuard, adminC.Film)
 		rAdmin.POST("/book", middlewares.AdminGuard, adminC.Book)
-		rAdmin.POST("/login", adminC.AdminLogin)
+		// rAdmin.PUT("/music", middlewares.AdminGuard, adminC.UpdateMusic)
+		// rAdmin.PUT("/film", middlewares.AdminGuard, adminC.UpdateFilm)
+		rAdmin.PUT("/update-book", middlewares.AdminGuard, adminC.UpdateBook)
 
 		rAdmin.DELETE("/music/:id", middlewares.AdminGuard, adminC.DeleteMusic)
 		rAdmin.DELETE("/film/:id", middlewares.AdminGuard, adminC.DeleteFilm)

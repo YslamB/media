@@ -186,7 +186,7 @@ func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) models.R
 }
 
 func (sr *AdminService) DeleteBook(ctx context.Context, id string) models.Response {
-	path := sr.repo.GetBookPath(ctx, id)
+	path := sr.repo.DeleteBook(ctx, id)
 
 	if path == "" {
 		return models.Response{Error: errors.New("not found"), Status: 404}
@@ -209,7 +209,14 @@ func (sr *AdminService) Book(ctx context.Context, form *multipart.Form) models.R
 	bookExt := filepath.Ext(books[0].Filename)
 	imageEXT := filepath.Ext(images[0].Filename)
 
-	if bookExt != ".pdf" || imageEXT != ".jpg" {
+	allowedImageExts := map[string]bool{
+		".jpg":  true,
+		".jpeg": true,
+		".png":  true,
+		".webp": true,
+	}
+
+	if bookExt != ".pdf" || !allowedImageExts[imageEXT] {
 		return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
 	}
 
@@ -250,6 +257,79 @@ func (sr *AdminService) Book(ctx context.Context, form *multipart.Form) models.R
 	}
 
 	return models.Response{Data: &gin.H{"id": id}}
+}
+
+func (sr *AdminService) UpdateBook(ctx context.Context, form *multipart.Form) models.Response {
+
+	tx, _ := sr.repo.DB.Begin(ctx)
+	defer tx.Rollback(ctx)
+	bookID := form.Value["book_id"]
+	books := form.File["book"]
+	images := form.File["image"]
+	title := form.Value["title"]
+	description := form.Value["description"]
+	language := form.Value["language"]
+	categoryId := form.Value["category_id"]
+	fmt.Println(bookID[0])
+	fmt.Println(bookID[0])
+	fmt.Println(bookID[0])
+	fmt.Println(bookID[0])
+
+	uploadbookFilePath, uploadbookImagePath := sr.repo.UpdateBook(ctx, title[0], description[0], language[0], categoryId[0], bookID[0], tx)
+	if uploadbookFilePath == "" || uploadbookImagePath == "" {
+		return models.Response{Error: errors.New("not found"), Status: 404}
+	}
+
+	if len(books) == 1 {
+		bookExt := filepath.Ext(books[0].Filename)
+
+		if bookExt != ".pdf" {
+			return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
+		}
+
+		os.RemoveAll("." + uploadbookFilePath)
+		err := utils.SaveUploadedFile(books[0], "."+uploadbookFilePath)
+
+		if err != nil {
+			return models.Response{Error: err, Status: 500}
+		}
+
+	}
+
+	if len(images) == 1 {
+
+		allowedImageExts := map[string]bool{
+			".jpg":  true,
+			".jpeg": true,
+			".png":  true,
+			".webp": true,
+		}
+
+		imageEXT := filepath.Ext(images[0].Filename)
+		if !allowedImageExts[imageEXT] {
+			// todo: remove if uploaded book
+			return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
+		}
+
+		os.RemoveAll("." + uploadbookImagePath)
+		err := utils.SaveUploadedFile(images[0], "."+uploadbookImagePath)
+
+		if err != nil {
+			return models.Response{Error: err, Status: 500}
+		}
+
+		status, err := utils.ResizeImage("."+uploadbookImagePath, 700)
+
+		if err != nil {
+			os.RemoveAll("." + uploadbookImagePath)
+			return models.Response{Error: err, Status: status}
+		}
+
+	}
+
+	tx.Commit(ctx)
+
+	return models.Response{Data: &gin.H{"id": bookID[0]}}
 }
 
 func (sr *AdminService) AdminLogin(ctx context.Context, admin models.LoginForm) (string, string, error) {
