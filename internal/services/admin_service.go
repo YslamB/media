@@ -145,140 +145,83 @@ func (sr *AdminService) DeleteBook(ctx context.Context, id string) models.Respon
 	return models.Response{Data: gin.H{"message": "deleted"}}
 }
 
-func (sr *AdminService) Book(ctx context.Context, form *multipart.Form) models.Response {
+func (sr *AdminService) Book(ctx context.Context, form models.ElementData) models.Response {
 
-	books := form.File["book"]
-	images := form.File["image"]
+	title := form.Title
+	description := form.Description
+	language := form.Language
+	categoryId := form.CategoryID
 
-	if len(books) == 0 || len(images) == 0 {
-		return models.Response{Error: errors.New("no books or images found in the request"), Status: 400}
-	}
-
-	bookExt := filepath.Ext(books[0].Filename)
-	imageEXT := filepath.Ext(images[0].Filename)
-
-	allowedImageExts := map[string]bool{
-		".jpg":  true,
-		".jpeg": true,
-		".png":  true,
-		".webp": true,
-	}
-
-	if bookExt != ".pdf" || !allowedImageExts[imageEXT] {
-		return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
-	}
-
-	timestamp := time.Now().Unix()
-	bookFilename := fmt.Sprintf("%d%s", timestamp, bookExt)
-	imageFilename := fmt.Sprintf("%d%s", timestamp, imageEXT)
-	title := form.Value["title"]
-	description := form.Value["description"]
-	language := form.Value["language"]
-	categoryId := form.Value["category_id"]
-	uploadbookFilePath := fmt.Sprintf("./uploads/book/%d/", timestamp)
-	err := utils.SaveUploadedFile(books[0], uploadbookFilePath+bookFilename)
+	id, err := sr.repo.Book(ctx, title, description, language, categoryId)
 
 	if err != nil {
-		return models.Response{Error: err, Status: 500}
-	}
-
-	err = utils.SaveUploadedFile(images[0], uploadbookFilePath+imageFilename)
-
-	if err != nil {
-		os.RemoveAll(uploadbookFilePath)
-		return models.Response{Error: err, Status: 500}
-	}
-
-	status, err := utils.ResizeImage(uploadbookFilePath+imageFilename, 700)
-
-	if err != nil {
-		os.RemoveAll(uploadbookFilePath)
-		return models.Response{Error: err, Status: status}
-	}
-
-	id, err := sr.repo.Book(ctx, uploadbookFilePath[1:]+bookFilename, uploadbookFilePath[1:]+imageFilename,
-		title[0], description[0], language[0], categoryId[0])
-
-	if err != nil {
-		os.RemoveAll(uploadbookFilePath)
 		return models.Response{Error: err, Status: 500}
 	}
 
 	return models.Response{Data: &gin.H{"id": id}}
 }
 
-func (sr *AdminService) UpdateBook(ctx context.Context, form *multipart.Form) models.Response {
+// func (sr *AdminService) Book(ctx context.Context, form models.ElementData) models.Response {
 
-	tx, _ := sr.repo.DB.Begin(ctx)
-	defer tx.Rollback(ctx)
-	bookID := form.Value["book_id"]
-	books := form.File["book"]
-	images := form.File["image"]
-	title := form.Value["title"]
-	description := form.Value["description"]
-	language := form.Value["language"]
-	categoryId := form.Value["category_id"]
+// 	books := form.File["book"]
+// 	images := form.File["image"]
 
-	uploadbookFilePath, uploadbookImagePath := sr.repo.UpdateBook(ctx, title[0], description[0], language[0], categoryId[0], bookID[0], tx)
-	if uploadbookFilePath == "" || uploadbookImagePath == "" {
-		return models.Response{Error: errors.New("not found"), Status: 404}
-	}
+// 	if len(books) == 0 || len(images) == 0 {
+// 		return models.Response{Error: errors.New("no books or images found in the request"), Status: 400}
+// 	}
 
-	if len(books) > 1 || len(images) > 1 {
-		return models.Response{Error: errors.New("too many files"), Status: 400}
-	}
+// 	bookExt := filepath.Ext(books[0].Filename)
+// 	imageEXT := filepath.Ext(images[0].Filename)
 
-	if len(books) == 1 {
-		bookExt := filepath.Ext(books[0].Filename)
+// 	allowedImageExts := map[string]bool{
+// 		".jpg":  true,
+// 		".jpeg": true,
+// 		".png":  true,
+// 		".webp": true,
+// 	}
 
-		if bookExt != ".pdf" {
-			return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
-		}
+// 	if bookExt != ".pdf" || !allowedImageExts[imageEXT] {
+// 		return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
+// 	}
 
-		os.RemoveAll("." + uploadbookFilePath)
-		err := utils.SaveUploadedFile(books[0], "."+uploadbookFilePath)
+// 	timestamp := time.Now().Unix()
+// 	bookFilename := fmt.Sprintf("%d%s", timestamp, bookExt)
+// 	imageFilename := fmt.Sprintf("%d%s", timestamp, imageEXT)
+// 	title := form.Value["title"]
+// 	description := form.Value["description"]
+// 	language := form.Value["language"]
+// 	categoryId := form.Value["category_id"]
+// 	uploadbookFilePath := fmt.Sprintf("./uploads/book/%d/", timestamp)
+// 	err := utils.SaveUploadedFile(books[0], uploadbookFilePath+bookFilename)
 
-		if err != nil {
-			return models.Response{Error: err, Status: 500}
-		}
+// 	if err != nil {
+// 		return models.Response{Error: err, Status: 500}
+// 	}
 
-	}
+// 	err = utils.SaveUploadedFile(images[0], uploadbookFilePath+imageFilename)
 
-	if len(images) == 1 {
+// 	if err != nil {
+// 		os.RemoveAll(uploadbookFilePath)
+// 		return models.Response{Error: err, Status: 500}
+// 	}
 
-		allowedImageExts := map[string]bool{
-			".jpg":  true,
-			".jpeg": true,
-			".png":  true,
-			".webp": true,
-		}
+// 	status, err := utils.ResizeImage(uploadbookFilePath+imageFilename, 700)
 
-		imageEXT := filepath.Ext(images[0].Filename)
-		if !allowedImageExts[imageEXT] {
-			// todo: remove if uploaded book
-			return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
-		}
+// 	if err != nil {
+// 		os.RemoveAll(uploadbookFilePath)
+// 		return models.Response{Error: err, Status: status}
+// 	}
 
-		os.RemoveAll("." + uploadbookImagePath)
-		err := utils.SaveUploadedFile(images[0], "."+uploadbookImagePath)
+// 	id, err := sr.repo.Book(ctx, uploadbookFilePath[1:]+bookFilename, uploadbookFilePath[1:]+imageFilename,
+// 		title[0], description[0], language[0], categoryId[0])
 
-		if err != nil {
-			return models.Response{Error: err, Status: 500}
-		}
+// 	if err != nil {
+// 		os.RemoveAll(uploadbookFilePath)
+// 		return models.Response{Error: err, Status: 500}
+// 	}
 
-		status, err := utils.ResizeImage("."+uploadbookImagePath, 700)
-
-		if err != nil {
-			os.RemoveAll("." + uploadbookImagePath)
-			return models.Response{Error: err, Status: status}
-		}
-
-	}
-
-	tx.Commit(ctx)
-
-	return models.Response{Data: &gin.H{"id": bookID[0]}}
-}
+// 	return models.Response{Data: &gin.H{"id": id}}
+// }
 
 func (sr *AdminService) UpdateFilm(ctx context.Context, form *multipart.Form, element models.ElementData, method string) models.Response {
 	filmFilePath, filmImagePath, id := sr.repo.GetFilmImageFilePath(ctx, element.ID)
@@ -309,7 +252,7 @@ func (sr *AdminService) UpdateFilm(ctx context.Context, form *multipart.Form, el
 			filmExt := filepath.Ext(films[0].Filename)
 
 			if filmExt != ".mp4" {
-				return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
+				return models.Response{Error: errors.New("invalid file type, must be  .mp4 "), Status: 400}
 			}
 
 			os.RemoveAll("." + filepath.Dir(filmFilePath))
@@ -345,7 +288,7 @@ func (sr *AdminService) UpdateFilm(ctx context.Context, form *multipart.Form, el
 			imageEXT := filepath.Ext(images[0].Filename)
 			if !allowedImageExts[imageEXT] {
 				// todo: remove if uploaded film
-				return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
+				return models.Response{Error: errors.New("invalid file type, must be  .pdf "), Status: 400}
 			}
 
 			os.RemoveAll("." + filmImagePath)
@@ -370,6 +313,201 @@ func (sr *AdminService) UpdateFilm(ctx context.Context, form *multipart.Form, el
 	}
 
 	err := sr.repo.UpdateFilm(ctx, element.Title, element.Description, element.Language, element.ID, element.CategoryID)
+
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: &gin.H{"id": element.ID}}
+}
+
+func (sr *AdminService) UpdateBook(ctx context.Context, form *multipart.Form, element models.ElementData, method string) models.Response {
+	bookFilePath, bookImagePath, id := sr.repo.GetBookImageFilePath(ctx, element.ID)
+
+	if id == 0 {
+		return models.Response{Error: errors.New("not found"), Status: 404}
+	}
+
+	if method == "POST" {
+		id := form.Value["id"][0]
+
+		books := form.File["book"]
+		images := form.File["image"]
+
+		if len(books) > 1 || len(images) > 1 {
+			return models.Response{Error: errors.New("too many files"), Status: 400}
+		}
+
+		if len(books) == 1 {
+
+			if bookFilePath == "" {
+				timestamp := time.Now().Unix()
+				bookFilePath = fmt.Sprintf("/uploads/book/%d/%d.pdf", timestamp, timestamp)
+				sr.repo.UpdateBookPath(ctx, bookFilePath, element.ID)
+			}
+
+			bookExt := filepath.Ext(books[0].Filename)
+
+			if bookExt != ".pdf" {
+				return models.Response{Error: errors.New("invalid file type, must be  .pdf "), Status: 400}
+			}
+
+			os.RemoveAll("." + filepath.Dir(bookFilePath))
+			time.Sleep(5 * time.Second)
+			err := utils.SaveUploadedFile(books[0], "."+strings.TrimSuffix(bookFilePath, filepath.Ext(bookFilePath))+bookExt)
+
+			if err != nil {
+				return models.Response{Error: err, Status: 500}
+			}
+
+			// go utils.ConvertToHLS("."+strings.TrimSuffix(bookFilePath, filepath.Base(bookFilePath)), strings.TrimSuffix(filepath.Base(bookFilePath), filepath.Ext(filepath.Base(bookFilePath)))+bookExt, "film")
+
+			return models.Response{Data: &gin.H{"id": id}}
+
+		}
+
+		if len(images) == 1 {
+
+			if bookImagePath == "" {
+
+				timestamp := time.Now().Unix()
+				bookImagePath = fmt.Sprintf("/uploads/book/%d/%d.webp", timestamp, timestamp)
+				sr.repo.UpdateBookImage(ctx, bookImagePath, element.ID)
+			}
+
+			allowedImageExts := map[string]bool{
+				".jpg":  true,
+				".jpeg": true,
+				".png":  true,
+				".webp": true,
+			}
+
+			imageEXT := filepath.Ext(images[0].Filename)
+			if !allowedImageExts[imageEXT] {
+				// todo: remove if uploaded film
+				return models.Response{Error: errors.New("invalid file type, must be  .pdf "), Status: 400}
+			}
+
+			os.RemoveAll("." + bookImagePath)
+			err := utils.SaveUploadedFile(images[0], "."+strings.TrimSuffix(bookImagePath, filepath.Ext(bookImagePath))+imageEXT)
+
+			if err != nil {
+				return models.Response{Error: err, Status: 500}
+			}
+
+			fmt.Println("Ssss")
+
+			status, err := utils.ResizeImage("."+strings.TrimSuffix(bookImagePath, filepath.Ext(bookImagePath))+imageEXT, 700)
+
+			if err != nil {
+				os.RemoveAll("." + bookImagePath)
+				return models.Response{Error: err, Status: status}
+			}
+
+			return models.Response{Data: &gin.H{"id": id}}
+
+		}
+	}
+
+	err := sr.repo.UpdateBook(ctx, element.Title, element.Description, element.Language, element.CategoryID, element.ID)
+
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: &gin.H{"id": element.ID}}
+}
+
+func (sr *AdminService) UpdateMusic(ctx context.Context, form *multipart.Form, element models.ElementData, method string) models.Response {
+	musicFilePath, musicImagePath, id := sr.repo.GetMusicImageFilePath(ctx, element.ID)
+
+	if id == 0 {
+		return models.Response{Error: errors.New("not found"), Status: 404}
+	}
+
+	if method == "POST" {
+		id := form.Value["id"][0]
+
+		musics := form.File["music"]
+		images := form.File["image"]
+
+		if len(musics) > 1 || len(images) > 1 {
+			return models.Response{Error: errors.New("too many files"), Status: 400}
+		}
+
+		if len(musics) == 1 {
+
+			if musicFilePath == "" {
+
+				timestamp := time.Now().Unix()
+				musicFilePath = fmt.Sprintf("/uploads/music/%d/hls/%d.m3u8", timestamp, timestamp)
+				sr.repo.UpdateMusicPath(ctx, musicImagePath, element.ID)
+			}
+
+			musicExt := filepath.Ext(musics[0].Filename)
+
+			if musicExt != ".mp3" {
+				return models.Response{Error: errors.New("invalid file type, must be  .mp3 "), Status: 400}
+			}
+
+			os.RemoveAll("." + filepath.Dir(musicFilePath))
+			time.Sleep(5 * time.Second)
+			err := utils.SaveUploadedFile(musics[0], "."+strings.TrimSuffix(musicFilePath, filepath.Ext(musicFilePath))+musicExt)
+
+			if err != nil {
+				return models.Response{Error: err, Status: 500}
+			}
+
+			go utils.ConvertToHLS("."+strings.TrimSuffix(musicFilePath, filepath.Base(musicFilePath)), strings.TrimSuffix(filepath.Base(musicFilePath), filepath.Ext(filepath.Base(musicFilePath)))+musicExt, "music")
+
+			return models.Response{Data: &gin.H{"id": id}}
+
+		}
+
+		if len(images) == 1 {
+
+			if musicImagePath == "" {
+
+				timestamp := time.Now().Unix()
+				musicImagePath = fmt.Sprintf("/uploads/music/%d/%d.webp", timestamp, timestamp)
+				sr.repo.UpdateMusicImage(ctx, musicImagePath, element.ID)
+			}
+
+			allowedImageExts := map[string]bool{
+				".jpg":  true,
+				".jpeg": true,
+				".png":  true,
+				".webp": true,
+			}
+
+			imageEXT := filepath.Ext(images[0].Filename)
+			if !allowedImageExts[imageEXT] {
+				// todo: remove if uploaded music
+				return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
+			}
+
+			os.RemoveAll("." + musicImagePath)
+			err := utils.SaveUploadedFile(images[0], "."+strings.TrimSuffix(musicImagePath, filepath.Ext(musicImagePath))+imageEXT)
+
+			if err != nil {
+				return models.Response{Error: err, Status: 500}
+			}
+
+			fmt.Println("Ssss")
+
+			status, err := utils.ResizeImage("."+strings.TrimSuffix(musicImagePath, filepath.Ext(musicImagePath))+imageEXT, 700)
+
+			if err != nil {
+				os.RemoveAll("." + musicImagePath)
+				return models.Response{Error: err, Status: status}
+			}
+
+			return models.Response{Data: &gin.H{"id": id}}
+
+		}
+	}
+
+	err := sr.repo.UpdateMusic(ctx, element.Title, element.Description, element.Language, element.ID, element.CategoryID)
 
 	if err != nil {
 		return models.Response{Error: err, Status: 500}

@@ -18,8 +18,8 @@ var CreateFilm = `
 
 var CreateBook = `
 	insert into books 
-		(sub_category_id, language, title, description, path, image_path) 
-		values ($1, $2, $3, $4, $5, $6) 
+		(sub_category_id, language, title, description) 
+		values ($1, $2, $3, $4) 
 	returning id;
 `
 
@@ -92,10 +92,34 @@ var GetImageFilePathFilm = `
 	select path, image_path, id from films where id=$1;
 `
 
+var GetImageFilePathBook = `
+	select path, image_path, id from books where id=$1;
+`
+
+var GetImageFilePathMusic = `
+	select path, image_path, id from musics where id=$1;
+`
+
 var UpdateFilmImage = `
 	update films set image_path=$1 where id=$2
 `
 
 var UpdateFilmPath = `
 	update films set path=$1 where id=$2
+`
+
+var UpdateMusicImage = `
+	update musics set image_path=$1 where id=$2
+`
+
+var UpdateMusicPath = `
+	update musics set path=$1 where id=$2
+`
+
+var UpdateBookImage = `
+	update books set image_path=$1 where id=$2
+`
+
+var UpdateBookPath = `
+	update books set path=$1 where id=$2
 `

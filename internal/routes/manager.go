@@ -33,8 +33,7 @@ func SetupRoutes(r *gin.Engine, db *pgxpool.Pool, logger *mglogger.Logger) {
 
 		rAdmin.POST("/create-music", middlewares.AdminGuard, adminC.Music)
 		rAdmin.POST("/update-music", middlewares.AdminGuard, adminC.Music)
-		rAdmin.POST("/update-music-file", middlewares.AdminGuard, adminC.Music)
-		rAdmin.POST("/update-music-image", middlewares.AdminGuard, adminC.Music)
+		rAdmin.PUT("/update-music", middlewares.AdminGuard, adminC.Music)
 
 		rAdmin.POST("/create-film", middlewares.AdminGuard, adminC.Film)
 		rAdmin.POST("/update-film", middlewares.AdminGuard, adminC.UpdateFilm)
@@ -43,9 +42,8 @@ func SetupRoutes(r *gin.Engine, db *pgxpool.Pool, logger *mglogger.Logger) {
 		// rAdmin.PUT("/update-film-image", middlewares.AdminGuard, adminC.Film)
 
 		rAdmin.POST("/create-book", middlewares.AdminGuard, adminC.Book)
-		rAdmin.PUT("/update-book", middlewares.AdminGuard, adminC.Book)
-		rAdmin.PUT("/update-book-file", middlewares.AdminGuard, adminC.Book)
-		rAdmin.PUT("/update-book-image", middlewares.AdminGuard, adminC.Book)
+		rAdmin.POST("/update-book", middlewares.AdminGuard, adminC.UpdateBook)
+		rAdmin.PUT("/update-book", middlewares.AdminGuard, adminC.UpdateBook)
 
 		rAdmin.DELETE("/music/:id", middlewares.AdminGuard, adminC.DeleteMusic)
 		rAdmin.DELETE("/film/:id", middlewares.AdminGuard, adminC.DeleteFilm)
