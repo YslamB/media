@@ -93,7 +93,7 @@ func ConvertToHLS(filepath, filename, runType string) error {
 			"-g", "30",
 			"-hls_time", "10",
 			"-hls_playlist_type", "event",
-			filepath+removeExt(filename)+"HLS.m3u8",
+			filepath+removeExt(filename)+".m3u8",
 		)
 
 		err := cmd.Run()
@@ -102,7 +102,7 @@ func ConvertToHLS(filepath, filename, runType string) error {
 			return err
 		}
 
-		updateStatus(filepath[1:]+removeExt(filename)+"HLS.m3u8", "films")
+		updateStatus(filepath[1:]+removeExt(filename)+".m3u8", "films")
 		err = os.Remove(filepath + filename)
 		return err
 	}
@@ -113,13 +113,13 @@ func ConvertToHLS(filepath, filename, runType string) error {
 		"-b:a", "128k",
 		"-hls_time", "10",
 		"-hls_playlist_type", "event",
-		filepath+removeExt(filename)+"HLS.m3u8",
+		filepath+removeExt(filename)+".m3u8",
 	)
 
 	err := cmd.Run()
 
 	if err == nil {
-		updateStatus(filepath[1:]+removeExt(filename)+"HLS.m3u8", "musics")
+		updateStatus(filepath[1:]+removeExt(filename)+".m3u8", "musics")
 	}
 
 	err = os.Remove(filepath + filename)

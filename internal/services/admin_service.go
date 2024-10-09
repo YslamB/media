@@ -10,6 +10,7 @@ import (
 	"mime/multipart"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -92,7 +93,7 @@ func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) models.
 		return models.Response{Error: err, Status: status}
 	}
 
-	id, err := sr.repo.Music(ctx, uploadMusicFilePath[1:]+fmt.Sprint(timestamp)+"HLS.m3u8",
+	id, err := sr.repo.Music(ctx, uploadMusicFilePath[1:]+fmt.Sprint(timestamp)+".m3u8",
 		uploadMusicFilePath[1:]+imageFilename, title[0], description[0], language[0], categoryId[0])
 
 	if err == nil {
@@ -121,64 +122,11 @@ func (sr *AdminService) DeleteFilm(ctx context.Context, id string) models.Respon
 	return models.Response{Data: gin.H{"message": "deleted"}}
 }
 
-func (sr *AdminService) Film(ctx context.Context, form *multipart.Form) models.Response {
+func (sr *AdminService) Film(ctx context.Context, film models.ElementData) models.Response {
 
-	films := form.File["film"]
-	images := form.File["image"]
-
-	if len(films) == 0 || len(images) == 0 {
-		return models.Response{Error: errors.New("no films or images found in the request"), Status: 400}
-	}
-
-	filmExt := filepath.Ext(films[0].Filename)
-	imageEXT := filepath.Ext(images[0].Filename)
-
-	allowedImageExts := map[string]bool{
-		".jpg":  true,
-		".jpeg": true,
-		".png":  true,
-		".webp": true,
-	}
-
-	if filmExt != ".mp4" || !allowedImageExts[imageEXT] {
-		return models.Response{Error: errors.New("invalid file type, must be  .mp4 and .jpg "), Status: 400}
-	}
-
-	timestamp := time.Now().Unix()
-	filmFilename := fmt.Sprintf("%d%s", timestamp, filmExt)
-	imageFilename := fmt.Sprintf("%d%s", timestamp, imageEXT)
-	title := form.Value["title"]
-	description := form.Value["description"]
-	categoryId := form.Value["category_id"]
-	language := form.Value["language"]
-	uploadfilmFilePath := fmt.Sprintf("./uploads/film/%d/", timestamp)
-	err := utils.SaveUploadedFile(films[0], uploadfilmFilePath+filmFilename)
+	id, err := sr.repo.Film(ctx, film.Title, film.Description, film.Language, film.CategoryID)
 
 	if err != nil {
-		return models.Response{Error: err, Status: 500}
-	}
-
-	err = utils.SaveUploadedFile(images[0], uploadfilmFilePath+imageFilename)
-
-	if err != nil {
-		os.RemoveAll(uploadfilmFilePath)
-		return models.Response{Error: err, Status: 500}
-	}
-
-	status, err := utils.ResizeImage(uploadfilmFilePath+imageFilename, 700)
-
-	if err != nil {
-		os.RemoveAll(uploadfilmFilePath)
-		return models.Response{Error: err, Status: status}
-	}
-
-	id, err := sr.repo.Film(ctx, title[0], uploadfilmFilePath[1:]+fmt.Sprint(timestamp)+"HLS.m3u8",
-		uploadfilmFilePath[1:]+imageFilename, description[0], language[0], categoryId[0])
-
-	if err == nil {
-		go utils.ConvertToHLS(uploadfilmFilePath, filmFilename, "film")
-	} else {
-		os.RemoveAll(uploadfilmFilePath)
 		return models.Response{Error: err, Status: 500}
 	}
 
@@ -270,14 +218,14 @@ func (sr *AdminService) UpdateBook(ctx context.Context, form *multipart.Form) mo
 	description := form.Value["description"]
 	language := form.Value["language"]
 	categoryId := form.Value["category_id"]
-	fmt.Println(bookID[0])
-	fmt.Println(bookID[0])
-	fmt.Println(bookID[0])
-	fmt.Println(bookID[0])
 
 	uploadbookFilePath, uploadbookImagePath := sr.repo.UpdateBook(ctx, title[0], description[0], language[0], categoryId[0], bookID[0], tx)
 	if uploadbookFilePath == "" || uploadbookImagePath == "" {
 		return models.Response{Error: errors.New("not found"), Status: 404}
+	}
+
+	if len(books) > 1 || len(images) > 1 {
+		return models.Response{Error: errors.New("too many files"), Status: 400}
 	}
 
 	if len(books) == 1 {
@@ -330,6 +278,104 @@ func (sr *AdminService) UpdateBook(ctx context.Context, form *multipart.Form) mo
 	tx.Commit(ctx)
 
 	return models.Response{Data: &gin.H{"id": bookID[0]}}
+}
+
+func (sr *AdminService) UpdateFilm(ctx context.Context, form *multipart.Form, element models.ElementData, method string) models.Response {
+	filmFilePath, filmImagePath, id := sr.repo.GetFilmImageFilePath(ctx, element.ID)
+
+	if id == 0 {
+		return models.Response{Error: errors.New("not found"), Status: 404}
+	}
+
+	if method == "POST" {
+		id := form.Value["id"][0]
+
+		films := form.File["film"]
+		images := form.File["image"]
+
+		if len(films) > 1 || len(images) > 1 {
+			return models.Response{Error: errors.New("too many files"), Status: 400}
+		}
+
+		if len(films) == 1 {
+
+			if filmFilePath == "" {
+
+				timestamp := time.Now().Unix()
+				filmFilePath = fmt.Sprintf("/uploads/film/%d/hls/%d.m3u8", timestamp, timestamp)
+				sr.repo.UpdateFilmPath(ctx, filmImagePath, element.ID)
+			}
+
+			filmExt := filepath.Ext(films[0].Filename)
+
+			if filmExt != ".mp4" {
+				return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
+			}
+
+			os.RemoveAll("." + filepath.Dir(filmFilePath))
+			time.Sleep(5 * time.Second)
+			err := utils.SaveUploadedFile(films[0], "."+strings.TrimSuffix(filmFilePath, filepath.Ext(filmFilePath))+filmExt)
+
+			if err != nil {
+				return models.Response{Error: err, Status: 500}
+			}
+
+			go utils.ConvertToHLS("."+strings.TrimSuffix(filmFilePath, filepath.Base(filmFilePath)), strings.TrimSuffix(filepath.Base(filmFilePath), filepath.Ext(filepath.Base(filmFilePath)))+filmExt, "film")
+
+			return models.Response{Data: &gin.H{"id": id}}
+
+		}
+
+		if len(images) == 1 {
+
+			if filmImagePath == "" {
+
+				timestamp := time.Now().Unix()
+				filmImagePath = fmt.Sprintf("/uploads/film/%d/%d.webp", timestamp, timestamp)
+				sr.repo.UpdateFilmImage(ctx, filmImagePath, element.ID)
+			}
+
+			allowedImageExts := map[string]bool{
+				".jpg":  true,
+				".jpeg": true,
+				".png":  true,
+				".webp": true,
+			}
+
+			imageEXT := filepath.Ext(images[0].Filename)
+			if !allowedImageExts[imageEXT] {
+				// todo: remove if uploaded film
+				return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
+			}
+
+			os.RemoveAll("." + filmImagePath)
+			err := utils.SaveUploadedFile(images[0], "."+strings.TrimSuffix(filmImagePath, filepath.Ext(filmImagePath))+imageEXT)
+
+			if err != nil {
+				return models.Response{Error: err, Status: 500}
+			}
+
+			fmt.Println("Ssss")
+
+			status, err := utils.ResizeImage("."+strings.TrimSuffix(filmImagePath, filepath.Ext(filmImagePath))+imageEXT, 700)
+
+			if err != nil {
+				os.RemoveAll("." + filmImagePath)
+				return models.Response{Error: err, Status: status}
+			}
+
+			return models.Response{Data: &gin.H{"id": id}}
+
+		}
+	}
+
+	err := sr.repo.UpdateFilm(ctx, element.Title, element.Description, element.Language, element.ID, element.CategoryID)
+
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: &gin.H{"id": element.ID}}
 }
 
 func (sr *AdminService) AdminLogin(ctx context.Context, admin models.LoginForm) (string, string, error) {

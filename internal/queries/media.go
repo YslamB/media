@@ -11,8 +11,8 @@ var CreateMusic = `
 
 var CreateFilm = `
 	insert into films 
-		(sub_category_id, language, title, description, path, image_path) 
-		values ($1, $2, $3, $4, $5, $6) 
+		(sub_category_id, language, title, description) 
+		values ($1, $2, $3, $4) 
 	returning id;
 `
 
@@ -78,4 +78,24 @@ var GetCategories = `
 
 var UpdateBook = `
 	update books set sub_category_id=$1, language=$2, title=$3, description=$4 where id=$5 returning path, image_path;
+`
+
+var UpdateFilm = `
+	update films set sub_category_id=$1, language=$2, title=$3, description=$4 where id=$5 returning path, image_path;
+`
+
+var UpdateMusic = `
+	update musics set sub_category_id=$1, language=$2, title=$3, description=$4 where id=$5 returning path, image_path;
+`
+
+var GetImageFilePathFilm = `
+	select path, image_path, id from films where id=$1;
+`
+
+var UpdateFilmImage = `
+	update films set image_path=$1 where id=$2
+`
+
+var UpdateFilmPath = `
+	update films set path=$1 where id=$2
 `

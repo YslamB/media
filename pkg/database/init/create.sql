@@ -35,8 +35,8 @@ create table musics (
     "language" character varying(2) not null,
     "title" character varying(100) not null,
     "description" text not null,
-    "path" character varying(100) not null,
-    "image_path" character varying(100) not null,
+    "path" character varying(100)  default '',
+    "image_path" character varying(100)  default '',
     "created_at" timestamp without time zone default now(),
     CONSTRAINT musics_sub_category_id_fk 
         FOREIGN KEY ("sub_category_id") 
@@ -56,8 +56,8 @@ create table films (
     "status" boolean default false,
     "title" character varying(100) not null,
     "description" text not null,
-    "path" character varying(100) not null,
-    "image_path" character varying(100) not null,
+    "path" character varying(100) default '',
+    "image_path" character varying(100) default '',
     "created_at" timestamp without time zone default now(),
     CONSTRAINT films_sub_category_id_fk 
         FOREIGN KEY ("sub_category_id") 
@@ -76,8 +76,8 @@ create table books (
     "language" character varying(2) not null,
     "title" character varying(100) not null,
     "description" text not null,
-    "path" character varying(100) not null,
-    "image_path" character varying(100) not null,
+    "path" character varying(100) default '',
+    "image_path" character varying(100) default '',
     "created_at" timestamp without time zone default now(),
     CONSTRAINT books_sub_category_id_fk 
         FOREIGN KEY ("sub_category_id") 
