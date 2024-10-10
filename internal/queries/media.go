@@ -4,8 +4,8 @@ var GetAdmin = "SELECT username, password FROM admins WHERE username = $1"
 
 var CreateMusic = `
 	insert into musics 
-		(sub_category_id, language, title, description, path, image_path) 
-		values ($1, $2, $3, $4, $5, $6) 
+		(sub_category_id, language, title, description) 
+		values ($1, $2, $3, $4) 
 	returning id;
 `
 

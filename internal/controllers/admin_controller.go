@@ -30,14 +30,15 @@ func (ctrl *AdminController) GetUsers(c *gin.Context) {
 func (ctrl *AdminController) Music(c *gin.Context) {
 
 	ctx := c.Request.Context()
-	form, err := c.MultipartForm()
+	var reqBody models.ElementData
+	validationError := c.BindJSON(&reqBody)
 
-	if err != nil {
-		utils.GinResponse(c, models.Response{Status: 400, Error: err})
+	if validationError != nil {
+		utils.GinResponse(c, models.Response{Status: 400, Error: validationError})
 		return
 	}
 
-	data := ctrl.service.Music(ctx, form)
+	data := ctrl.service.Music(ctx, reqBody)
 	utils.GinResponse(c, data)
 }
 
@@ -92,6 +93,30 @@ func (ctrl *AdminController) UpdateFilm(c *gin.Context) {
 	}
 
 	data := ctrl.service.UpdateFilm(ctx, form, reqBody, c.Request.Method)
+	utils.GinResponse(c, data)
+}
+
+func (ctrl *AdminController) UpdateMusic(c *gin.Context) {
+
+	var reqBody models.ElementData
+	ctx := c.Request.Context()
+	var form *multipart.Form
+
+	if c.Request.Method == "POST" {
+		s := c.PostForm("id")[0]
+		reqBody.ID, _ = strconv.Atoi(string(s))
+
+		form, _ = c.MultipartForm()
+	} else {
+		validationError := c.BindJSON(&reqBody)
+
+		if validationError != nil {
+			utils.GinResponse(c, models.Response{Status: 400, Error: validationError})
+			return
+		}
+	}
+
+	data := ctrl.service.UpdateMusic(ctx, form, reqBody, c.Request.Method)
 	utils.GinResponse(c, data)
 }
 

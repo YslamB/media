@@ -39,9 +39,9 @@ func (r *AdminRepository) DeleteBook(ctx context.Context, id string) string {
 	return path
 }
 
-func (r *AdminRepository) Music(ctx context.Context, path, imagePath, title, desc, language, categoryId string) (string, error) {
+func (r *AdminRepository) Music(ctx context.Context, title, desc, language string, categoryId int) (string, error) {
 	var id string
-	err := r.DB.QueryRow(ctx, queries.CreateMusic, categoryId, language, title, desc, path, imagePath).Scan(&id)
+	err := r.DB.QueryRow(ctx, queries.CreateMusic, categoryId, language, title, desc).Scan(&id)
 	return id, err
 }
 
@@ -149,9 +149,10 @@ func (r *AdminRepository) UpdateFilmImage(ctx context.Context, path string, id i
 	fmt.Println(id)
 	r.DB.Exec(ctx, queries.UpdateFilmImage, path, id)
 }
+
 func (r *AdminRepository) UpdateBookImage(ctx context.Context, path string, id int) {
 	fmt.Println(id)
-	r.DB.Exec(ctx, queries.UpdateFilmImage, path, id)
+	r.DB.Exec(ctx, queries.UpdateBookImage, path, id)
 }
 
 func (r *AdminRepository) UpdateFilmPath(ctx context.Context, path string, id int) {
@@ -160,17 +161,13 @@ func (r *AdminRepository) UpdateFilmPath(ctx context.Context, path string, id in
 }
 
 func (r *AdminRepository) UpdateBookPath(ctx context.Context, path string, id int) {
-	_, err := r.DB.Exec(ctx, queries.UpdateBookPath, path, id)
-	fmt.Println("update book path error: ", path)
-	fmt.Println(err)
+	r.DB.Exec(ctx, queries.UpdateBookPath, path, id)
 }
 
 func (r *AdminRepository) UpdateMusicImage(ctx context.Context, path string, id int) {
-	fmt.Println(id)
 	r.DB.Exec(ctx, queries.UpdateMusicImage, path, id)
 }
 
 func (r *AdminRepository) UpdateMusicPath(ctx context.Context, path string, id int) {
-	fmt.Println(id)
 	r.DB.Exec(ctx, queries.UpdateMusicPath, path, id)
 }

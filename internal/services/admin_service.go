@@ -41,71 +41,6 @@ func (sr *AdminService) DeleteMusic(ctx context.Context, id string) models.Respo
 	return models.Response{Data: gin.H{"message": "deleted"}}
 }
 
-func (sr *AdminService) Music(ctx context.Context, form *multipart.Form) models.Response {
-
-	musics := form.File["music"]
-	images := form.File["image"]
-
-	if len(musics) == 0 || len(images) == 0 {
-		return models.Response{Error: errors.New("no musics or images found in the request"), Status: 400}
-	}
-
-	musicExt := filepath.Ext(musics[0].Filename)
-	imageEXT := filepath.Ext(images[0].Filename)
-
-	allowedImageExts := map[string]bool{
-		".jpg":  true,
-		".jpeg": true,
-		".png":  true,
-		".webp": true,
-	}
-
-	// Check if the music extension is valid and the image extension exists in the map
-	if musicExt != ".mp3" || !allowedImageExts[imageEXT] {
-		return models.Response{Error: errors.New("invalid file type, must be .mp3 and a valid image (.jpg, .jpeg, .png, .gif)"), Status: 400}
-	}
-
-	timestamp := time.Now().Unix()
-	musicFilename := fmt.Sprintf("%d%s", timestamp, musicExt)
-	imageFilename := fmt.Sprintf("%d%s", timestamp, imageEXT)
-	title := form.Value["title"]
-	categoryId := form.Value["category_id"]
-	description := form.Value["description"]
-	language := form.Value["language"]
-	uploadMusicFilePath := fmt.Sprintf("./uploads/music/%d/", timestamp)
-	err := utils.SaveUploadedFile(musics[0], uploadMusicFilePath+musicFilename)
-
-	if err != nil {
-		return models.Response{Error: err, Status: 500}
-	}
-
-	err = utils.SaveUploadedFile(images[0], uploadMusicFilePath+imageFilename)
-
-	if err != nil {
-		os.RemoveAll(uploadMusicFilePath)
-		return models.Response{Error: err, Status: 500}
-	}
-
-	status, err := utils.ResizeImage(uploadMusicFilePath+imageFilename, 700)
-
-	if err != nil {
-		os.RemoveAll(uploadMusicFilePath)
-		return models.Response{Error: err, Status: status}
-	}
-
-	id, err := sr.repo.Music(ctx, uploadMusicFilePath[1:]+fmt.Sprint(timestamp)+".m3u8",
-		uploadMusicFilePath[1:]+imageFilename, title[0], description[0], language[0], categoryId[0])
-
-	if err == nil {
-		go utils.ConvertToHLS(uploadMusicFilePath, musicFilename, "music")
-	} else {
-		os.RemoveAll(uploadMusicFilePath)
-		return models.Response{Error: err, Status: 500}
-	}
-
-	return models.Response{Data: &gin.H{"id": id}}
-}
-
 func (sr *AdminService) DeleteFilm(ctx context.Context, id string) models.Response {
 	path := sr.repo.GetFilmPath(ctx, id)
 
@@ -125,6 +60,17 @@ func (sr *AdminService) DeleteFilm(ctx context.Context, id string) models.Respon
 func (sr *AdminService) Film(ctx context.Context, film models.ElementData) models.Response {
 
 	id, err := sr.repo.Film(ctx, film.Title, film.Description, film.Language, film.CategoryID)
+
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: &gin.H{"id": id}}
+}
+
+func (sr *AdminService) Music(ctx context.Context, music models.ElementData) models.Response {
+
+	id, err := sr.repo.Music(ctx, music.Title, music.Description, music.Language, music.CategoryID)
 
 	if err != nil {
 		return models.Response{Error: err, Status: 500}
@@ -244,9 +190,15 @@ func (sr *AdminService) UpdateFilm(ctx context.Context, form *multipart.Form, el
 
 			if filmFilePath == "" {
 
-				timestamp := time.Now().Unix()
-				filmFilePath = fmt.Sprintf("/uploads/film/%d/hls/%d.m3u8", timestamp, timestamp)
-				sr.repo.UpdateFilmPath(ctx, filmImagePath, element.ID)
+				if filmImagePath != "" {
+					filmFilePath = strings.TrimSuffix(filmImagePath, filepath.Base(filmImagePath)) + "/hls/" + strings.TrimSuffix(filepath.Base(filmImagePath), filepath.Ext(filmImagePath)) + ".m3u8"
+				} else {
+					timestamp := time.Now().Unix()
+					filmFilePath = fmt.Sprintf("/uploads/film/%d/hls/%d.m3u8", timestamp, timestamp)
+				}
+				fmt.Println("filmFilePath")
+				fmt.Println(filmFilePath)
+				sr.repo.UpdateFilmPath(ctx, filmFilePath, element.ID)
 			}
 
 			filmExt := filepath.Ext(films[0].Filename)
@@ -273,9 +225,18 @@ func (sr *AdminService) UpdateFilm(ctx context.Context, form *multipart.Form, el
 
 			if filmImagePath == "" {
 
-				timestamp := time.Now().Unix()
-				filmImagePath = fmt.Sprintf("/uploads/film/%d/%d.webp", timestamp, timestamp)
+				if filmFilePath != "" {
+					startIndex := strings.Index(filmFilePath, "hls")
+					filmImagePath = filmFilePath[:startIndex] + strings.TrimSuffix(filepath.Base(filmFilePath), filepath.Ext(filmFilePath)) + ".webp"
+				} else {
+					timestamp := time.Now().Unix()
+					filmImagePath = fmt.Sprintf("/uploads/film/%d/%d.webp", timestamp, timestamp)
+
+				}
 				sr.repo.UpdateFilmImage(ctx, filmImagePath, element.ID)
+
+				fmt.Println(filmFilePath)
+				fmt.Println(filmFilePath)
 			}
 
 			allowedImageExts := map[string]bool{
@@ -341,8 +302,12 @@ func (sr *AdminService) UpdateBook(ctx context.Context, form *multipart.Form, el
 		if len(books) == 1 {
 
 			if bookFilePath == "" {
-				timestamp := time.Now().Unix()
-				bookFilePath = fmt.Sprintf("/uploads/book/%d/%d.pdf", timestamp, timestamp)
+				if bookImagePath != "" {
+					bookFilePath = strings.TrimSuffix(bookImagePath, filepath.Ext(bookImagePath)) + ".pdf"
+				} else {
+					timestamp := time.Now().Unix()
+					bookFilePath = fmt.Sprintf("/uploads/book/%d/%d.pdf", timestamp, timestamp)
+				}
 				sr.repo.UpdateBookPath(ctx, bookFilePath, element.ID)
 			}
 
@@ -352,7 +317,7 @@ func (sr *AdminService) UpdateBook(ctx context.Context, form *multipart.Form, el
 				return models.Response{Error: errors.New("invalid file type, must be  .pdf "), Status: 400}
 			}
 
-			os.RemoveAll("." + filepath.Dir(bookFilePath))
+			os.RemoveAll("." + bookFilePath)
 			time.Sleep(5 * time.Second)
 			err := utils.SaveUploadedFile(books[0], "."+strings.TrimSuffix(bookFilePath, filepath.Ext(bookFilePath))+bookExt)
 
@@ -370,8 +335,13 @@ func (sr *AdminService) UpdateBook(ctx context.Context, form *multipart.Form, el
 
 			if bookImagePath == "" {
 
-				timestamp := time.Now().Unix()
-				bookImagePath = fmt.Sprintf("/uploads/book/%d/%d.webp", timestamp, timestamp)
+				if bookFilePath != "" {
+					bookImagePath = strings.TrimSuffix(bookFilePath, filepath.Ext(bookFilePath)) + ".webp"
+				} else {
+					timestamp := time.Now().Unix()
+					bookImagePath = fmt.Sprintf("/uploads/book/%d/%d.webp", timestamp, timestamp)
+				}
+
 				sr.repo.UpdateBookImage(ctx, bookImagePath, element.ID)
 			}
 
@@ -385,7 +355,7 @@ func (sr *AdminService) UpdateBook(ctx context.Context, form *multipart.Form, el
 			imageEXT := filepath.Ext(images[0].Filename)
 			if !allowedImageExts[imageEXT] {
 				// todo: remove if uploaded film
-				return models.Response{Error: errors.New("invalid file type, must be  .pdf "), Status: 400}
+				return models.Response{Error: errors.New("invalid file type, must be  .jpg, .jpeg, .png, .webp "), Status: 400}
 			}
 
 			os.RemoveAll("." + bookImagePath)
@@ -439,9 +409,13 @@ func (sr *AdminService) UpdateMusic(ctx context.Context, form *multipart.Form, e
 
 			if musicFilePath == "" {
 
-				timestamp := time.Now().Unix()
-				musicFilePath = fmt.Sprintf("/uploads/music/%d/hls/%d.m3u8", timestamp, timestamp)
-				sr.repo.UpdateMusicPath(ctx, musicImagePath, element.ID)
+				if musicImagePath != "" {
+					musicFilePath = strings.TrimSuffix(musicImagePath, filepath.Base(musicImagePath)) + "/hls/" + strings.TrimSuffix(filepath.Base(musicImagePath), filepath.Ext(musicImagePath)) + ".m3u8"
+				} else {
+					timestamp := time.Now().Unix()
+					musicFilePath = fmt.Sprintf("/uploads/music/%d/hls/%d.m3u8", timestamp, timestamp)
+				}
+				sr.repo.UpdateMusicPath(ctx, musicFilePath, element.ID)
 			}
 
 			musicExt := filepath.Ext(musics[0].Filename)
@@ -468,8 +442,13 @@ func (sr *AdminService) UpdateMusic(ctx context.Context, form *multipart.Form, e
 
 			if musicImagePath == "" {
 
-				timestamp := time.Now().Unix()
-				musicImagePath = fmt.Sprintf("/uploads/music/%d/%d.webp", timestamp, timestamp)
+				if musicFilePath != "" {
+					startIndex := strings.Index(musicFilePath, "hls")
+					musicImagePath = musicFilePath[:startIndex] + strings.TrimSuffix(filepath.Base(musicFilePath), filepath.Ext(musicFilePath)) + ".webp"
+				} else {
+					timestamp := time.Now().Unix()
+					musicImagePath = fmt.Sprintf("/uploads/music/%d/%d.webp", timestamp, timestamp)
+				}
 				sr.repo.UpdateMusicImage(ctx, musicImagePath, element.ID)
 			}
 
