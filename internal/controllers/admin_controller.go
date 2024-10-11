@@ -27,6 +27,14 @@ func (ctrl *AdminController) GetUsers(c *gin.Context) {
 	utils.GinResponse(c, data)
 }
 
+func (u *AdminController) Films(c *gin.Context) {
+	page := c.MustGet("page").(int)
+	limit := c.MustGet("limit").(int)
+	ctx := c.Request.Context()
+	data := u.service.Films(ctx, page, limit)
+	utils.GinResponse(c, data)
+}
+
 func (ctrl *AdminController) Music(c *gin.Context) {
 
 	ctx := c.Request.Context()

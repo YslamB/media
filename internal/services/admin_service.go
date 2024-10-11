@@ -32,6 +32,10 @@ func (us *AdminService) GetUsers(ctx context.Context, id int) models.Response {
 
 }
 
+func (s *AdminService) Films(ctx context.Context, page, limit int) models.Response {
+	return s.repo.Films(ctx, page, limit)
+}
+
 func (sr *AdminService) DeleteMusic(ctx context.Context, id string) models.Response {
 	path := sr.repo.GetMusicPath(ctx, id)
 	if path == "" {
@@ -59,7 +63,7 @@ func (sr *AdminService) DeleteFilm(ctx context.Context, id string) models.Respon
 
 func (sr *AdminService) Film(ctx context.Context, film models.ElementData) models.Response {
 
-	id, err := sr.repo.Film(ctx, film.Title, film.Description, film.Language, film.CategoryID)
+	id, err := sr.repo.Film(ctx, film.Title, film.Description, film.Language, film.CategoryID, film.Status)
 
 	if err != nil {
 		return models.Response{Error: err, Status: 500}
@@ -70,7 +74,7 @@ func (sr *AdminService) Film(ctx context.Context, film models.ElementData) model
 
 func (sr *AdminService) Music(ctx context.Context, music models.ElementData) models.Response {
 
-	id, err := sr.repo.Music(ctx, music.Title, music.Description, music.Language, music.CategoryID)
+	id, err := sr.repo.Music(ctx, music.Title, music.Description, music.Language, music.CategoryID, music.Status)
 
 	if err != nil {
 		return models.Response{Error: err, Status: 500}
@@ -98,7 +102,7 @@ func (sr *AdminService) Book(ctx context.Context, form models.ElementData) model
 	language := form.Language
 	categoryId := form.CategoryID
 
-	id, err := sr.repo.Book(ctx, title, description, language, categoryId)
+	id, err := sr.repo.Book(ctx, title, description, language, categoryId, form.Status)
 
 	if err != nil {
 		return models.Response{Error: err, Status: 500}
@@ -106,68 +110,6 @@ func (sr *AdminService) Book(ctx context.Context, form models.ElementData) model
 
 	return models.Response{Data: &gin.H{"id": id}}
 }
-
-// func (sr *AdminService) Book(ctx context.Context, form models.ElementData) models.Response {
-
-// 	books := form.File["book"]
-// 	images := form.File["image"]
-
-// 	if len(books) == 0 || len(images) == 0 {
-// 		return models.Response{Error: errors.New("no books or images found in the request"), Status: 400}
-// 	}
-
-// 	bookExt := filepath.Ext(books[0].Filename)
-// 	imageEXT := filepath.Ext(images[0].Filename)
-
-// 	allowedImageExts := map[string]bool{
-// 		".jpg":  true,
-// 		".jpeg": true,
-// 		".png":  true,
-// 		".webp": true,
-// 	}
-
-// 	if bookExt != ".pdf" || !allowedImageExts[imageEXT] {
-// 		return models.Response{Error: errors.New("invalid file type, must be  .pdf and .jpg "), Status: 400}
-// 	}
-
-// 	timestamp := time.Now().Unix()
-// 	bookFilename := fmt.Sprintf("%d%s", timestamp, bookExt)
-// 	imageFilename := fmt.Sprintf("%d%s", timestamp, imageEXT)
-// 	title := form.Value["title"]
-// 	description := form.Value["description"]
-// 	language := form.Value["language"]
-// 	categoryId := form.Value["category_id"]
-// 	uploadbookFilePath := fmt.Sprintf("./uploads/book/%d/", timestamp)
-// 	err := utils.SaveUploadedFile(books[0], uploadbookFilePath+bookFilename)
-
-// 	if err != nil {
-// 		return models.Response{Error: err, Status: 500}
-// 	}
-
-// 	err = utils.SaveUploadedFile(images[0], uploadbookFilePath+imageFilename)
-
-// 	if err != nil {
-// 		os.RemoveAll(uploadbookFilePath)
-// 		return models.Response{Error: err, Status: 500}
-// 	}
-
-// 	status, err := utils.ResizeImage(uploadbookFilePath+imageFilename, 700)
-
-// 	if err != nil {
-// 		os.RemoveAll(uploadbookFilePath)
-// 		return models.Response{Error: err, Status: status}
-// 	}
-
-// 	id, err := sr.repo.Book(ctx, uploadbookFilePath[1:]+bookFilename, uploadbookFilePath[1:]+imageFilename,
-// 		title[0], description[0], language[0], categoryId[0])
-
-// 	if err != nil {
-// 		os.RemoveAll(uploadbookFilePath)
-// 		return models.Response{Error: err, Status: 500}
-// 	}
-
-// 	return models.Response{Data: &gin.H{"id": id}}
-// }
 
 func (sr *AdminService) UpdateFilm(ctx context.Context, form *multipart.Form, element models.ElementData, method string) models.Response {
 	filmFilePath, filmImagePath, id := sr.repo.GetFilmImageFilePath(ctx, element.ID)

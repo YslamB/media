@@ -4,22 +4,22 @@ var GetAdmin = "SELECT username, password FROM admins WHERE username = $1"
 
 var CreateMusic = `
 	insert into musics 
-		(sub_category_id, language, title, description) 
-		values ($1, $2, $3, $4) 
+		(sub_category_id, language, title, description, status) 
+		values ($1, $2, $3, $4, $5) 
 	returning id;
 `
 
 var CreateFilm = `
 	insert into films 
-		(sub_category_id, language, title, description) 
-		values ($1, $2, $3, $4) 
+		(sub_category_id, language, title, description, status) 
+		values ($1, $2, $3, $4, $5) 
 	returning id;
 `
 
 var CreateBook = `
 	insert into books 
-		(sub_category_id, language, title, description) 
-		values ($1, $2, $3, $4) 
+		(sub_category_id, language, title, description, status) 
+		values ($1, $2, $3, $4, $5) 
 	returning id;
 `
 
@@ -37,6 +37,9 @@ var DeleteBook = `
 
 var GetFilms = `
 	select id, sub_category_id, language, title, description, path, image_path from films where status=true offset $1 limit $2;
+`
+var GetAdminFilms = `
+	select id, sub_category_id, language, title, description, path, image_path, created_at::TEXT from films order by created_at offset $1 limit $2;
 `
 
 var GetBooks = `

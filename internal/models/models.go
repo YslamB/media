@@ -30,6 +30,7 @@ type Film struct {
 	Description   string `json:"description"`
 	Path          string `json:"path"`
 	ImagePath     string `json:"image_path"`
+	CreatedAt     string `json:"created_at"`
 }
 
 type Music struct {
@@ -116,4 +117,5 @@ type ElementData struct {
 	Description string `json:"description" binding:"required"`
 	CategoryID  int    `json:"category_id" binding:"required"`
 	Language    string `json:"language" binding:"required"`
+	Status      bool   `json:"status" binding:"required"`
 }

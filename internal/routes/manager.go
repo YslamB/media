@@ -24,10 +24,11 @@ func SetupRoutes(r *gin.Engine, db *pgxpool.Pool, logger *mglogger.Logger) {
 	rAdmin := r.Group("media/admin", middlewares.Guard)
 	adminC := controllers.NewAdminController(db, logger)
 
-	r.POST("/login", adminC.AdminLogin)
+	rAdmin.POST("/login", adminC.AdminLogin)
 
 	{
 		rAdmin.GET("", middlewares.AdminGuard, adminC.GetUsers)
+		rAdmin.GET("/films", middlewares.PageLimitSet, adminC.Films)
 		rAdmin.POST("/category", middlewares.AdminGuard, adminC.Category)
 		rAdmin.POST("/sub-category", middlewares.AdminGuard, adminC.SubCategory)
 

@@ -39,21 +39,21 @@ func (r *AdminRepository) DeleteBook(ctx context.Context, id string) string {
 	return path
 }
 
-func (r *AdminRepository) Music(ctx context.Context, title, desc, language string, categoryId int) (string, error) {
+func (r *AdminRepository) Music(ctx context.Context, title, desc, language string, categoryId int, status bool) (string, error) {
 	var id string
-	err := r.DB.QueryRow(ctx, queries.CreateMusic, categoryId, language, title, desc).Scan(&id)
+	err := r.DB.QueryRow(ctx, queries.CreateMusic, categoryId, language, title, desc, status).Scan(&id)
 	return id, err
 }
 
-func (r *AdminRepository) Film(ctx context.Context, title, desc, language string, categoryId int) (string, error) {
+func (r *AdminRepository) Film(ctx context.Context, title, desc, language string, categoryId int, status bool) (string, error) {
 	var id string
-	err := r.DB.QueryRow(ctx, queries.CreateFilm, categoryId, language, title, desc).Scan(&id)
+	err := r.DB.QueryRow(ctx, queries.CreateFilm, categoryId, language, title, desc, status).Scan(&id)
 	return id, err
 }
 
-func (r *AdminRepository) Book(ctx context.Context, title, desc, language string, categoryId int) (string, error) {
+func (r *AdminRepository) Book(ctx context.Context, title, desc, language string, categoryId int, status bool) (string, error) {
 	var id string
-	err := r.DB.QueryRow(ctx, queries.CreateBook, categoryId, language, title, desc).Scan(&id)
+	err := r.DB.QueryRow(ctx, queries.CreateBook, categoryId, language, title, desc, status).Scan(&id)
 	return id, err
 }
 
@@ -170,4 +170,25 @@ func (r *AdminRepository) UpdateMusicImage(ctx context.Context, path string, id 
 
 func (r *AdminRepository) UpdateMusicPath(ctx context.Context, path string, id int) {
 	r.DB.Exec(ctx, queries.UpdateMusicPath, path, id)
+}
+
+func (r *AdminRepository) Films(ctx context.Context, page, limit int) models.Response {
+	offset := page*limit - limit
+	var data = make([]models.Film, 0)
+	rows, err := r.DB.Query(ctx, queries.GetAdminFilms, offset, limit)
+
+	for rows.Next() {
+		var film models.Film
+		err = rows.Scan(&film.Id, &film.SubCategoryId, &film.Language, &film.Title, &film.Description, &film.Path, &film.ImagePath, &film.CreatedAt)
+		if err != nil {
+			return models.Response{Error: err, Status: 500}
+		}
+		data = append(data, film)
+	}
+
+	if err != nil {
+		return models.Response{Error: err, Status: 500}
+	}
+
+	return models.Response{Data: data}
 }
